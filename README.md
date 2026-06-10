@@ -46,7 +46,11 @@ escuta reativa via `onSnapshot` em nuvem).
 
 ## 📂 Estrutura de Arquivos
 
+---
+
+## 📂 Estrutura de Arquivos
+
 ```bash
-├── jogo_aluno.html          # Interface do Jogo (Acesso do Aluno/Usuário)
-├── Painel Analítico.html      # Painel Analítico (Acesso do Especialista/Professor)
+├── index.html          # Interface do Jogo (Acesso do Aluno/Usuário)
+├── dashboard.html      # Painel Analítico (Acesso do Especialista/Professor)
 └── README.md           # Documentação do projeto (Este arquivo)
