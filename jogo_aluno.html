@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcessiQuiz Play - Edição AEE Profissional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-principal: #0b1329;
+            --bg-card: #1c2541;
+            --texto-claro: #f8fafc;
+            --texto-mutado: #64748b;
+            --cor-primaria: #3a86ff;
+            --cor-acerto: #06d6a0;
+            --cor-atencao: #ff7043;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-claro);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+        }
+
+        .painel {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 { margin-top: 0; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+
+        .indicador-nivel {
+            background: rgba(58, 134, 255, 0.2);
+            color: #70a1ff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 15px;
+            align-self: flex-start;
+        }
+
+        .barra-progresso-container {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .barra-progresso {
+            height: 100%;
+            width: 0%;
+            background: var(--cor-acerto);
+            transition: width 0.4s ease;
+        }
+
+        .area-jogo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .pergunta-texto {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            min-height: 50px;
+            line-height: 1.4;
+        }
+
+        .card-imagem-estimulo {
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 64px;
+            color: var(--cor-primaria);
+            margin-bottom: 25px;
+            border: 2px dashed rgba(255,255,255,0.1);
+        }
+
+        .container-opcoes { width: 100%; }
+
+        .btn-resposta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.1);
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-resposta:hover {
+            background: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+        }
+
+        .feedback-acerto { background-color: var(--cor-acerto) !important; border-color: var(--cor-acerto) !important; }
+        .feedback-tentenovamente { background-color: var(--cor-atencao) !important; border-color: var(--cor-atencao) !important; }
+
+        #texto-status { font-size: 18px; font-weight: bold; margin-top: 15px; height: 25px; }
+    </style>
+</head>
+<body>
+
+    <div class="painel">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2><i class="fa-solid fa-brain"></i> AcessiQuiz Play</h2>
+            <div class="indicador-nivel" id="label-nivel">Carregando...</div>
+        </div>
+        <div class="barra-progresso-container">
+            <div class="barra-progresso" id="barra-progresso"></div>
+        </div>
+
+        <div class="area-jogo">
+            <div class="pergunta-texto" id="campo-pergunta">Preparando estímulos neurológicos...</div>
+            
+            <div class="card-imagem-estimulo" id="figura-estimulo">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+            </div>
+
+            <div class="container-opcoes" id="campo-opcoes"></div>
+            <div id="texto-status"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // CONECTE AQUI O SEU CONFIG DO FIRESTORE GOOGLE CLOUD
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8xX4K-RKCgJ0EEbQ00sKVkMWPDepshg8",
+            authDomain: "acessiquiz.firebaseapp.com",
+            projectId: "acessiquiz",
+            storageBucket: "acessiquiz.firebasestorage.app",
+            messagingSenderId: "938864321076",
+            appId: "1:938864321076:web:26d788b1ab95efc6d86061",
+            measurementId: "G-XZ9J8R2SJ9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Banco de Dados Científico Baseado em Protocolos de Avaliação Cognitiva do AEE
+        const trilhaNiveis = [
+            {
+                nivelNome: "Estágio 1: Controle Inibitório",
+                pergunta: "Atenção: ignore a cor do botão. Clique na palavra que descreve o que a figura abaixo REALMENTE é:",
+                icone: "fa-solid fa-apple-whole", // Uma Maçã
+                categoria: "Controle Inibitório (Stroop)",
+                alternativas: [
+                    { texto: "É uma Fruta", correta: true, icone: "fa-solid fa-basket-shopping" },
+                    { texto: "É um Carro", correta: false, icone: "fa-solid fa-car" }
+                ]
+            },
+            {
+                nivelNome: "Estágio 2: Sequenciamento Lógico",
+                pergunta: "Para escovar os dentes, precisamos colocar a pasta na escova. O que fazemos IMEDIATAMENTE depois?",
+                icone: "fa-solid fa-tooth",
+                categoria: "Planejamento Executivo",
+                alternativas: [
+                    { texto: "Escovar os dentes com movimentos suaves", correta: true, icone: "fa-solid fa-sparkles" },
+                    { texto: "Guardar a escova seca no armário", correta: false, icone: "fa-solid fa-box" }
+                ]
+            },
+            {
+                nivelNome: "Estágio 3: Flexibilidade Cognitiva",
+                pergunta: "O tempo mudou e começou a chover muito forte lá fora! Qual item se tornou necessário usar agora?",
+                icone: "fa-solid fa-cloud-showers-heavy",
+                categoria: "Flexibilidade Adaptativa",
+                alternativas: [
+                    { texto: "Um guarda-chuva ou capa", correta: true, icone: "fa-solid fa-umbrella" },
+                    { texto: "Óculos de sol e boné", correta: false, icone: "fa-solid fa-sun" }
+                ]
+            }
+        ];
+
+        let indiceAtual = 0;
+        let tempoInicioQuestao = Date.now();
+
+        window.atualizarJogo = function() {
+            const progressoPorcento = (indiceAtual / trilhaNiveis.length) * 100;
+            document.getElementById('barra-progresso').style.width = `${progressoPorcento}%`;
+
+            if (indiceAtual >= trilhaNiveis.length) {
+                document.getElementById('campo-pergunta').innerText = "Sessão Concluída! Excelente esforço! 🏆";
+                document.getElementById('figura-estimulo').innerHTML = '<i class="fa-solid fa-square-check" style="color:#06d6a0;"></i>';
+                document.getElementById('campo-opcoes').innerHTML = "";
+                document.getElementById('texto-status').style.color = "var(--cor-acerto)";
+                document.getElementById('texto-status').innerText = "Dados clínicos transmitidos para a nuvem.";
+                return;
+            }
+
+            const dadosNivel = trilhaNiveis[indiceAtual];
+            document.getElementById('label-nivel').innerText = dadosNivel.nivelNome;
+            document.getElementById('campo-pergunta').innerText = dadosNivel.pergunta;
+            document.getElementById('figura-estimulo').innerHTML = `<i class="${dadosNivel.icone}"></i>`;
+            
+            const container = document.getElementById('campo-opcoes');
+            container.innerHTML = "";
+            document.getElementById('texto-status').innerText = "";
+
+            dadosNivel.alternativas.forEach(alt => {
+                const botao = document.createElement('button');
+                botao.className = 'btn-resposta';
+                botao.innerHTML = `<i class="${alt.icone}"></i> ${alt.texto}`;
+                botao.onclick = () => checarResposta(alt.correta, botao, dadosNivel.categoria);
+                container.appendChild(botao);
+            });
+
+            tempoInicioQuestao = Date.now();
+        }
+
+        async function checarResposta(correta, botaoElemento, categoria) {
+            const tempoDecisao = (Date.now() - tempoInicioQuestao) / 1000;
+            document.querySelectorAll('.btn-resposta').forEach(b => b.disabled = true);
+
+            const status = document.getElementById('texto-status');
+
+            if (correta) {
+                botaoElemento.classList.add('feedback-acerto');
+                status.style.color = "var(--cor-acerto)";
+                status.innerHTML = "Estímulo processado com sucesso! 🌟";
+            } else {
+                botaoElemento.classList.add('feedback-tentenovamente');
+                status.style.color = "var(--cor-atencao)";
+                status.innerHTML = "Tentativa registrada na telemetria. Continuando... 🚀";
+            }
+
+            // ENVIANDO MÉTRICAS TÉCNICAS DIRETAMENTE PARA O FIRESTORE
+            try {
+                await addDoc(collection(db, "telemetria_acessiquiz"), {
+                    alunoID: "Sessao_AEE_Amostra", 
+                    nivel: indiceAtual + 1,
+                    categoriaAEE: categoria,
+                    tempoRespostaSegundos: tempoDecisao,
+                    comportamentoAssertivo: correta,
+                    horarioRegistro: new Date().toISOString()
+                });
+            } catch (e) {
+                console.error("Erro Cloud: ", e);
+            }
+
+            setTimeout(() => {
+                indiceAtual++;
+                atualizarJogo();
+            }, 2500);
+        }
+
+        atualizarJogo();
+    </script>
+</body>
+</html>

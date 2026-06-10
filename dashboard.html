@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcessiQuiz - Dashboard de Especialistas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-principal: #0b1329;
+            --bg-card: #1c2541;
+            --texto-claro: #f8fafc;
+            --texto-mutado: #64748b;
+            --cor-primaria: #3a86ff;
+            --cor-acerto: #06d6a0;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-claro);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .painel {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.03);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h2 { margin-top: 0; font-size: 24px; display: flex; align-items: center; gap: 10px; }
+
+        .metricas-rapidas { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .quadro-metrica { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .quadro-metrica span { display: block; font-size: 13px; color: var(--texto-mutado); margin-bottom: 5px; }
+        .quadro-metrica strong { font-size: 24px; color: var(--cor-primaria); }
+
+        .container-grafico { position: relative; width: 100%; height: 320px; }
+    </style>
+</head>
+<body>
+
+    <div class="painel">
+        <h2><i class="fa-solid fa-chart-line"></i> Painel Clínico Integrado (Pais e Psicólogos)</h2>
+        <p style="color: var(--texto-mutado); font-size: 14px; margin: -5px 0 25px 0;">Leitura em tempo real diretamente dos servidores da Google Cloud.</p>
+
+        <div class="metricas-rapidas">
+            <div class="quadro-metrica">
+                <span>Tempo Médio de Resposta (Foco Cognitivo)</span>
+                <strong id="metrica-tempo">0.00s</strong>
+            </div>
+            <div class="quadro-metrica">
+                <span>Níveis Concluídos com Sucesso</span>
+                <strong id="metrica-acerto" style="color: var(--cor-acerto);">0</strong>
+            </div>
+        </div>
+
+        <div class="container-grafico">
+            <canvas id="graficoEvolucao"></canvas>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // COLOQUE AS MESMAS CREDENCIAIS DO JOGO AQUI
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8xX4K-RKCgJ0EEbQ00sKVkMWPDepshg8",
+            authDomain: "acessiquiz.firebaseapp.com",
+            projectId: "acessiquiz",
+  	    storageBucket: "acessiquiz.firebasestorage.app",
+            messagingSenderId: "938864321076",
+            appId: "1:938864321076:web:26d788b1ab95efc6d86061",
+            measurementId: "G-XZ9J8R2SJ9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Inicializa Gráfico
+        const ctx = document.getElementById('graficoEvolucao').getContext('2d');
+        let grafico = new Chart(ctx, {
+            type: 'line',
+            data: { labels: [], datasets: [{ label: 'Tempo de Processamento (s)', data: [], borderColor: '#3a86ff', borderWidth: 3, fill: true, tension: 0.2 }] },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // ESCUTA EM TEMPO REAL OS DADOS DA GOOGLE CLOUD
+        const q = query(collection(db, "telemetria_acessiquiz"), orderBy("horarioRegistro", "asc"));
+        onSnapshot(q, (snapshot) => {
+            let somaTempos = 0;
+            let tempos = [];
+            let niveis = [];
+            
+            snapshot.forEach((doc) => {
+                const dados = doc.data();
+                tempos.push(dados.tempoResposta);
+                niveis.push(`Nível ${dados.nivel}`);
+                somaTempos += dados.tempoResposta;
+            });
+
+            if(tempos.length > 0) {
+                document.getElementById('metrica-tempo').innerText = `${(somaTempos / tempos.length).toFixed(2)}s`;
+                document.getElementById('metrica-acerto').innerText = tempos.length;
+
+                grafico.data.labels = niveis;
+                grafico.data.datasets[0].data = tempos;
+                grafico.update();
+            }
+        });
+    </script>
+</body>
+</html>
