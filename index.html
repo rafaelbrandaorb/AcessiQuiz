@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcessiQuiz - Módulo de Pareamento Inclusivo</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #1e293b;
+            --accent-green: #00ffaa;
+            --accent-pink: #ff007f;
+            --accent-blue: #3a86ff;
+            --text-color: #f8fafc;
+            --text-muted: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 2px solid rgba(0, 255, 170, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--accent-green);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .instructions {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        /* Área de Jogo */
+        .game-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        /* Elementos Arrastáveis */
+        .source-container {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            width: 100%;
+        }
+
+        /* Alvos de Destino */
+        .target-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        /* Estilização das Formas Geométricas (SVG e CSS) */
+        .item {
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .item:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+
+        .target-box {
+            width: 140px;
+            height: 140px;
+            border: 4px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, border-color 0.3s;
+            position: relative;
+        }
+
+        .target-box.drag-over {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 170, 0.05);
+        }
+
+        .target-box.correct {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 170, 0.15);
+            border-style: solid;
+        }
+
+        /* Classes de Cores Vibrantes */
+        .color-blue { fill: var(--accent-blue); background-color: var(--accent-blue); border-radius: 12px; }
+        .color-pink { fill: var(--accent-pink); background-color: var(--accent-pink); border-radius: 12px; }
+        .color-green { fill: var(--accent-green); background-color: var(--accent-green); border-radius: 12px; }
+
+        /* Botão Próximo / Feedback */
+        .feedback-btn {
+            margin-top: 30px;
+            background-color: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: none;
+            box-shadow: 0 8px 20px rgba(255, 0, 127, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .feedback-btn:hover {
+            transform: translateY(-2px);
+            background-color: #e0006c;
+        }
+
+        /* Interface do Professor / Telemetria Simples */
+        .telemetry-panel {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .telemetry-title {
+            color: var(--accent-blue);
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* Mapeamento de Sequências */
+        .sequence-display {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .seq-item {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .seq-blank {
+            border: 4px dashed var(--accent-pink);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; border-color: var(--accent-green); }
+            100% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1 id="phase-title">Fase 1: Formas</h1>
+        <p class="instructions" id="phase-instr">Arrasta a forma para o sítio correto!</p>
+
+        <div class="game-zone">
+            <!-- Os elementos serão injetados dinamicamente via JS para mudar de fase -->
+            <div class="source-container" id="source-zone"></div>
+            <div class="target-container" id="target-zone"></div>
+        </div>
+
+        <button class="feedback-btn" id="next-btn" onclick="nextPhase()">Muito Bem! Próxima Fase ➔</button>
+
+        <!-- Painel demonstrativo da Telemetria Silenciosa para o Pitch -->
+        <div class="telemetry-panel">
+            <div class="telemetry-title"><i class="fa-solid fa-chart-line"></i> Telemetria em Tempo Real (Painel do Professor)</div>
+            <p id="telemetry-log">A aguardar primeira interação... (Mapeando tempo de decisão e cliques errados sem estressar o aluno).</p>
+        </div>
+    </div>
+
+    <script>
+        // Configuração das Fases do MVP (Zero Leitura)
+        const phases = [
+            {
+                title: "Fase 1: Pareamento de Formas",
+                instr: "Encaixa cada forma no seu contorno correspondente!",
+                type: "shapes",
+                sources: [
+                    { id: "quadrado", html: '<svg class="item color-blue" viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="10"/></svg>' },
+                    { id: "circulo", html: '<svg class="item color-pink" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38"/></svg>' },
+                    { id: "triangulo", html: '<svg class="item color-green" viewBox="0 0 100 100"><polygon points="50,15 90,85 10,85"/></svg>' }
+                ],
+                targets: [
+                    { id: "circulo", label: "Círculo", stroke: '<circle cx="50" cy="50" r="38" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' },
+                    { id: "triangulo", label: "Triângulo", stroke: '<polygon points="50,15 90,85 10,85" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' },
+                    { id: "quadrado", label: "Quadrado", stroke: '<rect x="15" y="15" width="70" height="70" rx="10" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' }
+                ]
+            },
+            {
+                title: "Fase 2: Agrupamento por Cores",
+                instr: "Separa os objetos guardando-os na caixa da mesma cor!",
+                type: "colors",
+                sources: [
+                    { id: "pink-1", color: "pink", html: '<div class="item color-pink" style="width:60px; height:60px;"></div>' },
+                    { id: "blue-1", color: "blue", html: '<div class="item color-blue" style="width:60px; height:60px;"></div>' },
+                    { id: "green-1", color: "green", html: '<div class="item color-green" style="width:60px; height:60px;"></div>' },
+                    { id: "pink-2", color: "pink", html: '<div class="item color-pink" style="width:60px; height:60px; border-radius:50%;"></div>' }
+                ],
+                targets: [
+                    { id: "blue", label: "Caixa Azul", bg: "var(--accent-blue)" },
+                    { id: "pink", label: "Caixa Rosa", bg: "var(--accent-pink)" },
+                    { id: "green", label: "Caixa Verde", bg: "var(--accent-green)" }
+                ]
+            },
+            {
+                title: "Fase 3: Sequenciamento Lógico",
+                instr: "Qual é a cor que completa a sequência abaixo?",
+                type: "sequence",
+                sequencePattern: ["blue", "pink", "blue"], // Padrão: Azul, Rosa, Azul, [?] -> Resposta: Rosa
+                correctAnswer: "pink",
+                sources: [
+                    { id: "green", color: "green", html: '<div class="item color-green" style="width:70px; height:70px;"></div>' },
+                    { id: "pink", color: "pink", html: '<div class="item color-pink" style="width:70px; height:70px;"></div>' },
+                    { id: "blue", color: "blue", html: '<div class="item color-blue" style="width:70px; height:70px;"></div>' }
+                ]
+            }
+        ];
+
+        let currentPhaseIndex = 0;
+        let startTime = Date.now();
+        let wrongAttempts = 0;
+        let correctMatches = 0;
+
+        function loadPhase(index) {
+            currentPhaseIndex = index;
+            const phase = phases[index];
+            
+            // Reset de métricas da fase
+            startTime = Date.now();
+            wrongAttempts = 0;
+            correctMatches = 0;
+            
+            document.getElementById("phase-title").innerText = phase.title;
+            document.getElementById("phase-instr").innerText = phase.instr;
+            document.getElementById("next-btn").style.display = "none";
+            updateTelemetry();
+
+            const sourceZone = document.getElementById("source-zone");
+            const targetZone = document.getElementById("target-zone");
+            
+            sourceZone.innerHTML = "";
+            targetZone.innerHTML = "";
+            sourceZone.style.flexDirection = "row";
+
+            if (phase.type === "shapes") {
+                // Renderizar objetos para arrastar (Embaralhados)
+                [...phase.sources].sort(() => Math.random() - 0.5).forEach(src => {
+                    const div = document.createElement("div");
+                    div.innerHTML = src.html;
+                    const element = div.firstElementChild;
+                    element.id = src.id;
+                    element.draggable = true;
+                    element.addEventListener("dragstart", dragStart);
+                    sourceZone.appendChild(element);
+                });
+
+                // Renderizar alvos
+                phase.targets.forEach(tgt => {
+                    const box = document.createElement("div");
+                    box.className = "target-box";
+                    box.dataset.accept = tgt.id;
+                    box.innerHTML = `<svg width="100" height="100" viewBox="0 0 100 100">${tgt.stroke}</svg>`;
+                    setupTargetEvents(box);
+                    targetZone.appendChild(box);
+                });
+
+            } else if (phase.type === "colors") {
+                // Renderizar blocos coloridos
+                [...phase.sources].sort(() => Math.random() - 0.5).forEach(src => {
+                    const div = document.createElement("div");
+                    div.innerHTML = src.html;
+                    const element = div.firstElementChild;
+                    element.id = src.id;
+                    element.dataset.color = src.color;
+                    element.draggable = true;
+                    element.addEventListener("dragstart", dragStart);
+                    sourceZone.appendChild(element);
+                });
+
+                // Renderizar caixas coloridas destino
+                phase.targets.forEach(tgt => {
+                    const box = document.createElement("div");
+                    box.className = "target-box";
+                    box.dataset.accept = tgt.id;
+                    box.style.borderColor = tgt.bg;
+                    box.innerHTML = `<span style="font-size:14px; font-weight:bold; color:#cbd5e1; position:absolute; bottom:10px;">${tgt.label}</span>`;
+                    setupTargetEvents(box);
+                    targetZone.appendChild(box);
+                });
+
+            } else if (phase.type === "sequence") {
+                sourceZone.style.flexDirection = "column";
+                // Renderizar linha da sequência em cima
+                const seqRow = document.createElement("div");
+                seqRow.className = "sequence-display";
+                
+                phase.sequencePattern.forEach(color => {
+                    const item = document.createElement("div");
+                    item.className = `seq-item color-${color}`;
+                    seqRow.appendChild(item);
+                });
+
+                // Adicionar o espaço vazio piscando para preencher
+                const blank = document.createElement("div");
+                blank.className = "target-box seq-blank";
+                blank.style.width = "80px";
+                blank.style.height = "80px";
+                blank.dataset.accept = phase.correctAnswer;
+                setupTargetEvents(blank);
+                seqRow.appendChild(blank);
+                
+                sourceZone.appendChild(seqRow);
+
+                // Opções de resposta em baixo (Zona de Alvos temporariamente usada para as opções clicáveis/arrastáveis)
+                const optionsContainer = document.createElement("div");
+                optionsContainer.className = "source-container";
+                
+                phase.sources.sort(() => Math.random() - 0.5).forEach(src => {
+                    const div = document.createElement("div");
+                    div.innerHTML = src.html;
+                    const element = div.firstElementChild;
+                    element.id = src.id;
+                    element.dataset.color = src.color;
+                    element.draggable = true;
+                    element.addEventListener("dragstart", dragStart);
+                    optionsContainer.appendChild(element);
+                });
+                targetZone.appendChild(optionsContainer);
+            }
+        }
+
+        // Funções de Drag and Drop API
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+        }
+
+        function setupTargetEvents(target) {
+            target.addEventListener("dragover", (e) => e.preventDefault());
+            target.addEventListener("dragenter", function() { this.classList.add("drag-over"); });
+            target.addEventListener("dragleave", function() { this.classList.remove("drag-over"); });
+            target.addEventListener("drop", function(e) {
+                e.preventDefault();
+                this.classList.remove("drag-over");
+                
+                const draggedId = e.dataTransfer.getData("text/plain");
+                const draggedElement = document.getElementById(draggedId);
+                if (!draggedElement) return;
+
+                const acceptedValue = this.dataset.accept;
+                const itemValue = phases[currentPhaseIndex].type === "shapes" ? draggedId : draggedElement.dataset.color;
+
+                if (acceptedValue === itemValue) {
+                    // Acertou!
+                    this.classList.add("correct");
+                    if(phases[currentPhaseIndex].type === "sequence") {
+                        this.classList.remove("seq-blank");
+                        this.innerHTML = "";
+                    }
+                    this.appendChild(draggedElement);
+                    draggedElement.draggable = false;
+                    draggedElement.style.cursor = "default";
+                    
+                    correctMatches++;
+                    checkWinCondition();
+                } else {
+                    // Errou silenciosamente (Sem som punitivo ou tela vermelha agressiva!)
+                    wrongAttempts++;
+                    draggedElement.style.transform = "shake 0.3s"; // Poderia adicionar um feedback visual suave
+                    updateTelemetry();
+                }
+            });
+        }
+
+        function checkWinCondition() {
+            const phase = phases[currentPhaseIndex];
+            const requiredMatches = phase.type === "colors" ? phase.sources.length : (phase.type === "sequence" ? 1 : phase.targets.length);
+            
+            updateTelemetry();
+
+            if (correctMatches === requiredMatches) {
+                document.getElementById("next-btn").style.display = "inline-block";
+                if(currentPhaseIndex === phases.length - 1) {
+                    document.getElementById("next-btn").innerText = "🏆 Jogo Concluído! Parabéns!";
+                }
+            }
+        }
+
+        function updateTelemetry() {
+            const timeSpent = ((Date.now() - startTime) / 1000).toFixed(1);
+            const log = `Fase Atual: ${currentPhaseIndex + 1} | Tempo de Decisão: ${timeSpent}s | Toques/Arrastes Incorretos: ${wrongAttempts} | Sucesso Cognitivo: ${correctMatches}`;
+            document.getElementById("telemetry-log").innerText = log;
+        }
+
+        function nextPhase() {
+            if (currentPhaseIndex < phases.length - 1) {
+                loadPhase(currentPhaseIndex + 1);
+            } else {
+                // Reiniciar o ciclo do MVP para demonstração
+                loadPhase(0);
+            }
+        }
+
+        // Atualizar contador de tempo de forma transparente na telemetria
+        setInterval(() => {
+            if(document.getElementById("next-btn").style.display !== "inline-block") {
+                updateTelemetry();
+            }
+        }, 1000);
+
+        // Inicializar o jogo
+        loadPhase(0);
+    </script>
+</body>
+</html>
