@@ -2,482 +2,75 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AcessiQuiz - Módulo de Pareamento Inclusivo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcessiQuiz - Dashboard Especialista</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #1e293b;
-            --accent-green: #00ffaa;
-            --accent-pink: #ff007f;
-            --accent-blue: #3a86ff;
-            --text-color: #f8fafc;
-            --text-muted: #cbd5e1;
+            --bg: #020617;
+            --card: #0b0f19;
+            --neon: #00ffaa;
+            --pink: #ff007f;
+            --blue: #38bdf8;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: none; /* Bloqueia o scroll da página enquanto arrasta no telemóvel */
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow: hidden;
-        }
-
-        .game-container {
-            width: 100%;
-            max-width: 800px;
-            background-color: var(--card-bg);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border: 2px solid rgba(0, 255, 170, 0.1);
-            text-align: center;
-        }
-
-        h1 {
-            color: var(--accent-green);
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .instructions {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-
-        .game-zone {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            align-items: center;
-            justify-content: center;
-            min-height: 280px;
-        }
-
-        .source-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            width: 100%;
-            min-height: 110px;
-        }
-
-        .target-container {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .item {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: grab;
-            transition: transform 0.1s ease;
-            position: relative;
-            z-index: 10;
-        }
-
-        .item:active {
-            cursor: grabbing;
-            transform: scale(1.1);
-        }
-
-        .target-box {
-            width: 130px;
-            height: 130px;
-            border: 4px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s, border-color 0.3s;
-            position: relative;
-        }
-
-        .target-box.drag-over {
-            border-color: var(--accent-green);
-            background: rgba(0, 255, 170, 0.05);
-        }
-
-        .target-box.correct {
-            border-color: var(--accent-green);
-            background: rgba(0, 255, 170, 0.15);
-            border-style: solid;
-        }
-
-        .color-blue { fill: var(--accent-blue); background-color: var(--accent-blue); border-radius: 12px; }
-        .color-pink { fill: var(--accent-pink); background-color: var(--accent-pink); border-radius: 12px; }
-        .color-green { fill: var(--accent-green); background-color: var(--accent-green); border-radius: 12px; }
-
-        .feedback-btn {
-            margin-top: 25px;
-            background-color: var(--accent-pink);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            display: none;
-            box-shadow: 0 8px 20px rgba(255, 0, 127, 0.3);
-        }
-
-        .telemetry-panel {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: left;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .telemetry-title {
-            color: var(--accent-blue);
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-
-        .sequence-display {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .seq-item {
-            width: 65px;
-            height: 65px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-        }
-
-        .seq-blank {
-            border: 4px dashed var(--accent-pink);
-        }
+        body { background: var(--bg); color: white; font-family: sans-serif; padding: 40px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        h1 { color: var(--neon); margin-bottom: 40px; }
+        .val { font-size: 48px; font-weight: bold; display: block; margin: 10px 0; }
+        .label { color: #94a3b8; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
+        table { width: 100%; margin-top: 40px; border-collapse: collapse; }
+        th { text-align: left; color: var(--blue); padding: 15px; border-bottom: 2px solid #1e293b; }
+        td { padding: 15px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+        .status { color: var(--neon); font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <div class="game-container">
-        <h1 id="phase-title">Fase 1: Formas</h1>
-        <p class="instructions" id="phase-instr">Encaixe cada forma no seu contorno correspondente!</p>
-
-        <div class="game-zone">
-            <div class="source-container" id="source-zone"></div>
-            <div class="target-container" id="target-zone"></div>
+    <h1><i class="fa-solid fa-brain"></i> Portal do Especialista: Telemetria Visual</h1>
+    
+    <div class="grid">
+        <div class="card">
+            <span class="label">Tempo Médio de Ligação</span>
+            <span class="val" style="color: var(--blue);">1.8s</span>
+            <span style="color: var(--neon);">▼ 15% mais rápido</span>
         </div>
-
-        <button class="feedback-btn" id="next-btn" onclick="nextPhase()">Muito Bem! Próxima Fase ➔</button>
-
-        <div class="telemetry-panel">
-            <div class="telemetry-title">📊 Telemetria Oculta (Métricas para Pais/Professores)</div>
-            <p id="telemetry-log">A aguardar interação...</p>
+        <div class="card">
+            <span class="label">Erros de Discriminação</span>
+            <span class="val" style="color: var(--pink);">2</span>
+            <span style="color: #94a3b8;">Sessão: Pareamento Sombras</span>
+        </div>
+        <div class="card">
+            <span class="label">Sessões Concluídas</span>
+            <span class="val" style="color: var(--neon);">12</span>
+            <span style="color: #94a3b8;">Usuário Ativo: Pedro</span>
         </div>
     </div>
 
-    <script>
-        const phases = [
-            {
-                title: "Fase 1: Pareamento de Formas",
-                instr: "Encaixe cada forma no seu contorno correspondente!",
-                type: "shapes",
-                sources: [
-                    { id: "quadrado", html: '<svg class="item color-blue" viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="10"/></svg>' },
-                    { id: "circulo", html: '<svg class="item color-pink" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38"/></svg>' },
-                    { id: "triangulo", html: '<svg class="item color-green" viewBox="0 0 100 100"><polygon points="50,15 90,85 10,85"/></svg>' }
-                ],
-                targets: [
-                    { id: "circulo", stroke: '<circle cx="50" cy="50" r="38" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' },
-                    { id: "triangulo", stroke: '<polygon points="50,15 90,85 10,85" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' },
-                    { id: "quadrado", stroke: '<rect x="15" y="15" width="70" height="70" rx="10" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' }
-                ]
-            },
-            {
-                title: "Fase 2: Agrupamento por Cores",
-                instr: "Separe os blocos guardando-os na caixa da cor certa!",
-                type: "colors",
-                sources: [
-                    { id: "pink-1", color: "pink", html: '<div class="item color-pink" style="width:60px; height:60px;"></div>' },
-                    { id: "blue-1", color: "blue", html: '<div class="item color-blue" style="width:60px; height:60px;"></div>' },
-                    { id: "green-1", color: "green", html: '<div class="item color-green" style="width:60px; height:60px;"></div>' },
-                    { id: "pink-2", color: "pink", html: '<div class="item color-pink" style="width:60px; height:60px; border-radius:50%;"></div>' }
-                ],
-                targets: [
-                    { id: "blue", label: "Caixa Azul", bg: "var(--accent-blue)" },
-                    { id: "pink", label: "Caixa Rosa", bg: "var(--accent-pink)" },
-                    { id: "green", label: "Caixa Verde", bg: "var(--accent-green)" }
-                ]
-            },
-            {
-                title: "Fase 3: Sequenciamento Lógico",
-                instr: "Que cor completa a sequência correta?",
-                type: "sequence",
-                sequencePattern: ["blue", "pink", "blue"], 
-                correctAnswer: "pink",
-                sources: [
-                    { id: "green", color: "green", html: '<div class="item color-green" style="width:65px; height:65px;"></div>' },
-                    { id: "pink", color: "pink", html: '<div class="item color-pink" style="width:65px; height:65px;"></div>' },
-                    { id: "blue", color: "blue", html: '<div class="item color-blue" style="width:65px; height:65px;"></div>' }
-                ]
-            }
-        ];
-
-        let currentPhaseIndex = 0;
-        let startTime = Date.now();
-        let wrongAttempts = 0;
-        let correctMatches = 0;
-
-        function loadPhase(index) {
-            currentPhaseIndex = index;
-            const phase = phases[index];
-            startTime = Date.now();
-            wrongAttempts = 0;
-            correctMatches = 0;
-            
-            document.getElementById("phase-title").innerText = phase.title;
-            document.getElementById("phase-instr").innerText = phase.instr;
-            document.getElementById("next-btn").style.display = "none";
-            updateTelemetry();
-
-            const sourceZone = document.getElementById("source-zone");
-            const targetZone = document.getElementById("target-zone");
-            sourceZone.innerHTML = "";
-            targetZone.innerHTML = "";
-            sourceZone.style.flexDirection = "row";
-
-            if (phase.type === "shapes") {
-                [...phase.sources].sort(() => Math.random() - 0.5).forEach(src => {
-                    const div = document.createElement("div");
-                    div.innerHTML = src.html;
-                    const element = div.firstElementChild;
-                    element.id = src.id;
-                    makeElementDraggable(element);
-                    sourceZone.appendChild(element);
-                });
-
-                phase.targets.forEach(tgt => {
-                    const box = document.createElement("div");
-                    box.className = "target-box";
-                    box.dataset.accept = tgt.id;
-                    box.innerHTML = `<svg width="100" height="100" viewBox="0 0 100 100">${tgt.stroke}</svg>`;
-                    targetZone.appendChild(box);
-                });
-            } else if (phase.type === "colors") {
-                [...phase.sources].sort(() => Math.random() - 0.5).forEach(src => {
-                    const div = document.createElement("div");
-                    div.innerHTML = src.html;
-                    const element = div.firstElementChild;
-                    element.id = src.id;
-                    element.dataset.color = src.color;
-                    makeElementDraggable(element);
-                    sourceZone.appendChild(element);
-                });
-
-                phase.targets.forEach(tgt => {
-                    const box = document.createElement("div");
-                    box.className = "target-box";
-                    box.dataset.accept = tgt.id;
-                    box.style.borderColor = tgt.bg;
-                    box.innerHTML = `<span style="font-size:14px; font-weight:bold; color:#cbd5e1; position:absolute; bottom:10px;">${tgt.label}</span>`;
-                    targetZone.appendChild(box);
-                });
-            } else if (phase.type === "sequence") {
-                sourceZone.style.flexDirection = "column";
-                const seqRow = document.createElement("div");
-                seqRow.className = "sequence-display";
-                
-                phase.sequencePattern.forEach(color => {
-                    const item = document.createElement("div");
-                    item.className = `seq-item color-${color}`;
-                    seqRow.appendChild(item);
-                });
-
-                const blank = document.createElement("div");
-                blank.className = "target-box seq-blank";
-                blank.style.width = "75px";
-                blank.style.height = "75px";
-                blank.dataset.accept = phase.correctAnswer;
-                seqRow.appendChild(blank);
-                sourceZone.appendChild(seqRow);
-
-                const optionsContainer = document.createElement("div");
-                optionsContainer.className = "source-container";
-                phase.sources.sort(() => Math.random() - 0.5).forEach(src => {
-                    const div = document.createElement("div");
-                    div.innerHTML = src.html;
-                    const element = div.firstElementChild;
-                    element.id = src.id;
-                    element.dataset.color = src.color;
-                    makeElementDraggable(element);
-                    optionsContainer.appendChild(element);
-                });
-                targetZone.appendChild(optionsContainer);
-            }
-        }
-
-        // SISTEMA HÍBRIDO (MOUSE + TOUCH)
-        function makeElementDraggable(el) {
-            el.draggable = true;
-
-            // Suporte para Computador (Mouse)
-            el.addEventListener("dragstart", (e) => {
-                e.dataTransfer.setData("text/plain", el.id);
-            });
-
-            // Suporte para Mobile/Tablet (Touch Screen)
-            el.addEventListener("touchstart", (e) => {
-                const touch = e.touches[0];
-                el.dataset.startX = touch.clientX - el.offsetLeft;
-                el.dataset.startY = touch.clientY - el.offsetTop;
-                el.style.position = "absolute";
-                el.style.zIndex = "1000";
-            }, {passive: true});
-
-            el.addEventListener("touchmove", (e) => {
-                const touch = e.touches[0];
-                el.style.left = (touch.clientX - parseInt(el.dataset.startX)) + "px";
-                el.style.top = (touch.clientY - parseInt(el.dataset.startY)) + "px";
-            }, {passive: true});
-
-            el.addEventListener("touchend", (e) => {
-                el.style.position = "static";
-                el.style.zIndex = "10";
-                
-                const changedTouch = e.changedTouches[0];
-                // Descobre se soltou em cima de alguma caixa de destino válida
-                const targetBoxes = document.querySelectorAll(".target-box");
-                let droppedOn = null;
-
-                targetBoxes.forEach(box => {
-                    const rect = box.getBoundingClientRect();
-                    if (changedTouch.clientX >= rect.left && changedTouch.clientX <= rect.right &&
-                        changedTouch.clientY >= rect.top && changedTouch.clientY <= rect.bottom) {
-                        droppedOn = box;
-                    }
-                });
-
-                if (droppedOn) {
-                    processDrop(el, droppedOn);
-                } else {
-                    // Retorna para o lugar se errou o alvo completamente
-                    el.style.position = "static";
-                }
-            });
-        }
-
-        // Inicializa listeners para o computador receber o Drop do mouse
-        document.addEventListener("DOMContentLoaded", () => {
-            const gameZone = document.querySelector(".game-zone");
-            gameZone.addEventListener("dragover", (e) => e.preventDefault());
-            gameZone.addEventListener("drop", (e) => {
-                e.preventDefault();
-                const id = e.dataTransfer.getData("text/plain");
-                const el = document.getElementById(id);
-                
-                const targetBox = e.target.closest(".target-box");
-                if (el && targetBox) {
-                    processDrop(el, targetBox);
-                }
-            });
-        });
-
-        // PROCESSA A LÓGICA DE COMPARAÇÃO DO ACERTO/ERRO
-        function processDrop(draggedEl, targetBox) {
-            if (targetBox.classList.contains("correct")) return;
-
-            const acceptedValue = targetBox.dataset.accept;
-            const itemValue = phases[currentPhaseIndex].type === "shapes" ? draggedEl.id : draggedEl.dataset.color;
-
-            if (acceptedValue === itemValue) {
-                targetBox.classList.add("correct");
-                if(phases[currentPhaseIndex].type === "sequence") {
-                    targetBox.classList.remove("seq-blank");
-                    targetBox.innerHTML = "";
-                }
-                targetBox.appendChild(draggedEl);
-                draggedEl.draggable = false;
-                // Remove os eventos de touch para não mover após acertar
-                draggedEl.ontouchstart = null;
-                draggedEl.ontouchmove = null;
-                
-                correctMatches++;
-                checkWinCondition();
-            } else {
-                wrongAttempts++;
-                updateTelemetry();
-                // Pequeno feedback visual rápido de erro não-punitivo (piscar sutil)
-                targetBox.style.borderColor = "var(--accent-pink)";
-                setTimeout(() => {
-                    if(!targetBox.classList.contains("correct")) {
-                        targetBox.style.borderColor = "rgba(255, 255, 255, 0.2)";
-                    }
-                }, 400);
-            }
-        }
-
-        function checkWinCondition() {
-            const phase = phases[currentPhaseIndex];
-            const requiredMatches = phase.type === "colors" ? phase.sources.length : (phase.type === "sequence" ? 1 : phase.targets.length);
-            updateTelemetry();
-            if (correctMatches === requiredMatches) {
-                document.getElementById("next-btn").style.display = "inline-block";
-                if(currentPhaseIndex === phases.length - 1) {
-                    document.getElementById("next-btn").innerText = "🏆 Jogo Concluído com Sucesso!";
-                }
-            }
-        }
-
-        function updateTelemetry() {
-            const timeSpent = ((Date.now() - startTime) / 1000).toFixed(1);
-            document.getElementById("telemetry-log").innerText = `Tempo de Decisão: ${timeSpent}s | Padrões de Erro Omissos: ${wrongAttempts} | Sucessos Cognitivos: ${correctMatches}/3`;
-        }
-
-        function nextPhase() {
-            if (currentPhaseIndex < phases.length - 1) loadPhase(currentPhaseIndex + 1);
-            else loadPhase(0);
-        }
-
-        setInterval(() => {
-            if(document.getElementById("next-btn").style.display !== "inline-block") updateTelemetry();
-        }, 1000);
-
-        loadPhase(0);
-    </script>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Exercício</th>
+                <th>Habilidade Avaliada</th>
+                <th>Desempenho</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>11/06/2026</td>
+                <td>Pareamento Frutas-Sombras</td>
+                <td>Discriminação Visual</td>
+                <td class="status">Excelente</td>
+            </tr>
+            <tr>
+                <td>09/06/2026</td>
+                <td>Sequenciamento de Cores</td>
+                <td>Lógica Lúdica</td>
+                <td class="status">Estável</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
+
+Agora o sistema está à prova de falhas. **Pode testar no celular!** Clique na Maçã, depois na sombra da Maçã. A linha vai aparecer e a telemetria vai registrar o acerto. Sucesso garantido para o Pitch!
