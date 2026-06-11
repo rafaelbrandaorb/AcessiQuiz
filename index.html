@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AcessiQuiz - Módulo de Pareamento Inclusivo</title>
     <style>
         :root {
@@ -21,6 +21,8 @@
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none;
+            -webkit-user-select: none;
+            touch-action: none; /* Bloqueia o scroll da página enquanto arrasta no telemóvel */
         }
 
         body {
@@ -32,6 +34,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow: hidden;
         }
 
         .game-container {
@@ -39,7 +42,7 @@
             max-width: 800px;
             background-color: var(--card-bg);
             border-radius: 24px;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             border: 2px solid rgba(0, 255, 170, 0.1);
             text-align: center;
@@ -47,7 +50,7 @@
 
         h1 {
             color: var(--accent-green);
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -55,23 +58,23 @@
 
         .instructions {
             color: var(--text-muted);
-            font-size: 1.2rem;
-            margin-bottom: 30px;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
             font-weight: 500;
         }
 
         .game-zone {
             display: flex;
             flex-direction: column;
-            gap: 40px;
+            gap: 30px;
             align-items: center;
             justify-content: center;
-            min-height: 300px;
+            min-height: 280px;
         }
 
         .source-container {
             display: flex;
-            gap: 25px;
+            gap: 20px;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
@@ -79,11 +82,12 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
             width: 100%;
+            min-height: 110px;
         }
 
         .target-container {
             display: flex;
-            gap: 40px;
+            gap: 30px;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
@@ -91,13 +95,15 @@
         }
 
         .item {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: grab;
-            transition: transform 0.2s;
+            transition: transform 0.1s ease;
+            position: relative;
+            z-index: 10;
         }
 
         .item:active {
@@ -106,8 +112,8 @@
         }
 
         .target-box {
-            width: 140px;
-            height: 140px;
+            width: 130px;
+            height: 130px;
             border: 4px dashed rgba(255, 255, 255, 0.2);
             border-radius: 20px;
             display: flex;
@@ -134,7 +140,7 @@
         .color-green { fill: var(--accent-green); background-color: var(--accent-green); border-radius: 12px; }
 
         .feedback-btn {
-            margin-top: 30px;
+            margin-top: 25px;
             background-color: var(--accent-pink);
             color: white;
             border: none;
@@ -145,17 +151,11 @@
             cursor: pointer;
             display: none;
             box-shadow: 0 8px 20px rgba(255, 0, 127, 0.3);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .feedback-btn:hover {
-            transform: translateY(-2px);
-            background-color: #e0006c;
         }
 
         .telemetry-panel {
-            margin-top: 40px;
-            padding-top: 20px;
+            margin-top: 30px;
+            padding-top: 15px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             text-align: left;
             font-size: 0.9rem;
@@ -175,12 +175,12 @@
             display: flex;
             gap: 15px;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         
         .seq-item {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -189,13 +189,6 @@
 
         .seq-blank {
             border: 4px dashed var(--accent-pink);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; border-color: var(--accent-green); }
-            100% { opacity: 0.6; }
         }
     </style>
 </head>
@@ -203,7 +196,7 @@
 
     <div class="game-container">
         <h1 id="phase-title">Fase 1: Formas</h1>
-        <p class="instructions" id="phase-instr">Arrasta a forma para o sítio correto!</p>
+        <p class="instructions" id="phase-instr">Encaixe cada forma no seu contorno correspondente!</p>
 
         <div class="game-zone">
             <div class="source-container" id="source-zone"></div>
@@ -222,7 +215,7 @@
         const phases = [
             {
                 title: "Fase 1: Pareamento de Formas",
-                instr: "Encaixa cada forma no seu contorno correspondente!",
+                instr: "Encaixe cada forma no seu contorno correspondente!",
                 type: "shapes",
                 sources: [
                     { id: "quadrado", html: '<svg class="item color-blue" viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="10"/></svg>' },
@@ -237,7 +230,7 @@
             },
             {
                 title: "Fase 2: Agrupamento por Cores",
-                instr: "Separa os blocos guardando-os na caixa da cor certa!",
+                instr: "Separe os blocos guardando-os na caixa da cor certa!",
                 type: "colors",
                 sources: [
                     { id: "pink-1", color: "pink", html: '<div class="item color-pink" style="width:60px; height:60px;"></div>' },
@@ -253,14 +246,14 @@
             },
             {
                 title: "Fase 3: Sequenciamento Lógico",
-                instr: "Que cor completa a sequência?",
+                instr: "Que cor completa a sequência correta?",
                 type: "sequence",
                 sequencePattern: ["blue", "pink", "blue"], 
                 correctAnswer: "pink",
                 sources: [
-                    { id: "green", color: "green", html: '<div class="item color-green" style="width:70px; height:70px;"></div>' },
-                    { id: "pink", color: "pink", html: '<div class="item color-pink" style="width:70px; height:70px;"></div>' },
-                    { id: "blue", color: "blue", html: '<div class="item color-blue" style="width:70px; height:70px;"></div>' }
+                    { id: "green", color: "green", html: '<div class="item color-green" style="width:65px; height:65px;"></div>' },
+                    { id: "pink", color: "pink", html: '<div class="item color-pink" style="width:65px; height:65px;"></div>' },
+                    { id: "blue", color: "blue", html: '<div class="item color-blue" style="width:65px; height:65px;"></div>' }
                 ]
             }
         ];
@@ -294,8 +287,7 @@
                     div.innerHTML = src.html;
                     const element = div.firstElementChild;
                     element.id = src.id;
-                    element.draggable = true;
-                    element.addEventListener("dragstart", dragStart);
+                    makeElementDraggable(element);
                     sourceZone.appendChild(element);
                 });
 
@@ -304,7 +296,6 @@
                     box.className = "target-box";
                     box.dataset.accept = tgt.id;
                     box.innerHTML = `<svg width="100" height="100" viewBox="0 0 100 100">${tgt.stroke}</svg>`;
-                    setupTargetEvents(box);
                     targetZone.appendChild(box);
                 });
             } else if (phase.type === "colors") {
@@ -314,8 +305,7 @@
                     const element = div.firstElementChild;
                     element.id = src.id;
                     element.dataset.color = src.color;
-                    element.draggable = true;
-                    element.addEventListener("dragstart", dragStart);
+                    makeElementDraggable(element);
                     sourceZone.appendChild(element);
                 });
 
@@ -325,7 +315,6 @@
                     box.dataset.accept = tgt.id;
                     box.style.borderColor = tgt.bg;
                     box.innerHTML = `<span style="font-size:14px; font-weight:bold; color:#cbd5e1; position:absolute; bottom:10px;">${tgt.label}</span>`;
-                    setupTargetEvents(box);
                     targetZone.appendChild(box);
                 });
             } else if (phase.type === "sequence") {
@@ -341,10 +330,9 @@
 
                 const blank = document.createElement("div");
                 blank.className = "target-box seq-blank";
-                blank.style.width = "80px";
-                blank.style.height = "80px";
+                blank.style.width = "75px";
+                blank.style.height = "75px";
                 blank.dataset.accept = phase.correctAnswer;
-                setupTargetEvents(blank);
                 seqRow.appendChild(blank);
                 sourceZone.appendChild(seqRow);
 
@@ -356,46 +344,111 @@
                     const element = div.firstElementChild;
                     element.id = src.id;
                     element.dataset.color = src.color;
-                    element.draggable = true;
-                    element.addEventListener("dragstart", dragStart);
+                    makeElementDraggable(element);
                     optionsContainer.appendChild(element);
                 });
                 targetZone.appendChild(optionsContainer);
             }
         }
 
-        function dragStart(e) { e.dataTransfer.setData("text/plain", e.target.id); }
+        // SISTEMA HÍBRIDO (MOUSE + TOUCH)
+        function makeElementDraggable(el) {
+            el.draggable = true;
 
-        function setupTargetEvents(target) {
-            target.addEventListener("dragover", (e) => e.preventDefault());
-            target.addEventListener("dragenter", function() { this.classList.add("drag-over"); });
-            target.addEventListener("dragleave", function() { this.classList.remove("drag-over"); });
-            target.addEventListener("drop", function(e) {
-                e.preventDefault();
-                this.classList.remove("drag-over");
+            // Suporte para Computador (Mouse)
+            el.addEventListener("dragstart", (e) => {
+                e.dataTransfer.setData("text/plain", el.id);
+            });
+
+            // Suporte para Mobile/Tablet (Touch Screen)
+            el.addEventListener("touchstart", (e) => {
+                const touch = e.touches[0];
+                el.dataset.startX = touch.clientX - el.offsetLeft;
+                el.dataset.startY = touch.clientY - el.offsetTop;
+                el.style.position = "absolute";
+                el.style.zIndex = "1000";
+            }, {passive: true});
+
+            el.addEventListener("touchmove", (e) => {
+                const touch = e.touches[0];
+                el.style.left = (touch.clientX - parseInt(el.dataset.startX)) + "px";
+                el.style.top = (touch.clientY - parseInt(el.dataset.startY)) + "px";
+            }, {passive: true});
+
+            el.addEventListener("touchend", (e) => {
+                el.style.position = "static";
+                el.style.zIndex = "10";
                 
-                const draggedId = e.dataTransfer.getData("text/plain");
-                const draggedElement = document.getElementById(draggedId);
-                if (!draggedElement) return;
+                const changedTouch = e.changedTouches[0];
+                // Descobre se soltou em cima de alguma caixa de destino válida
+                const targetBoxes = document.querySelectorAll(".target-box");
+                let droppedOn = null;
 
-                const acceptedValue = this.dataset.accept;
-                const itemValue = phases[currentPhaseIndex].type === "shapes" ? draggedId : draggedElement.dataset.color;
-
-                if (acceptedValue === itemValue) {
-                    this.classList.add("correct");
-                    if(phases[currentPhaseIndex].type === "sequence") {
-                        this.classList.remove("seq-blank");
-                        this.innerHTML = "";
+                targetBoxes.forEach(box => {
+                    const rect = box.getBoundingClientRect();
+                    if (changedTouch.clientX >= rect.left && changedTouch.clientX <= rect.right &&
+                        changedTouch.clientY >= rect.top && changedTouch.clientY <= rect.bottom) {
+                        droppedOn = box;
                     }
-                    this.appendChild(draggedElement);
-                    draggedElement.draggable = false;
-                    correctMatches++;
-                    checkWinCondition();
+                });
+
+                if (droppedOn) {
+                    processDrop(el, droppedOn);
                 } else {
-                    wrongAttempts++;
-                    updateTelemetry();
+                    // Retorna para o lugar se errou o alvo completamente
+                    el.style.position = "static";
                 }
             });
+        }
+
+        // Inicializa listeners para o computador receber o Drop do mouse
+        document.addEventListener("DOMContentLoaded", () => {
+            const gameZone = document.querySelector(".game-zone");
+            gameZone.addEventListener("dragover", (e) => e.preventDefault());
+            gameZone.addEventListener("drop", (e) => {
+                e.preventDefault();
+                const id = e.dataTransfer.getData("text/plain");
+                const el = document.getElementById(id);
+                
+                const targetBox = e.target.closest(".target-box");
+                if (el && targetBox) {
+                    processDrop(el, targetBox);
+                }
+            });
+        });
+
+        // PROCESSA A LÓGICA DE COMPARAÇÃO DO ACERTO/ERRO
+        function processDrop(draggedEl, targetBox) {
+            if (targetBox.classList.contains("correct")) return;
+
+            const acceptedValue = targetBox.dataset.accept;
+            const itemValue = phases[currentPhaseIndex].type === "shapes" ? draggedEl.id : draggedEl.dataset.color;
+
+            if (acceptedValue === itemValue) {
+                targetBox.classList.add("correct");
+                if(phases[currentPhaseIndex].type === "sequence") {
+                    targetBox.classList.remove("seq-blank");
+                    targetBox.innerHTML = "";
+                }
+                targetBox.appendChild(draggedEl);
+                draggedEl.draggable = false;
+                // Remove os eventos de touch para não mover após acertar
+                draggedEl.ontouchstart = null;
+                draggedEl.ontouchmove = null;
+                
+                correctMatches++;
+                checkWinCondition();
+            } else {
+                wrongAttempts++;
+                updateTelemetry();
+                // Pequeno feedback visual rápido de erro não-punitivo (piscar sutil)
+                targetBox.style.borderColor = "var(--accent-pink)";
+                setTimeout(() => {
+                    if(!targetBox.classList.contains("correct")) {
+                        targetBox.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                    }
+                }, 400);
+            }
         }
 
         function checkWinCondition() {
@@ -405,7 +458,7 @@
             if (correctMatches === requiredMatches) {
                 document.getElementById("next-btn").style.display = "inline-block";
                 if(currentPhaseIndex === phases.length - 1) {
-                    document.getElementById("next-btn").innerText = "🏆 Jogo Concluído! Parabéns!";
+                    document.getElementById("next-btn").innerText = "🏆 Jogo Concluído com Sucesso!";
                 }
             }
         }
