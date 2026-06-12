@@ -71,14 +71,10 @@
             transition: all 0.2s;
         }
 
-        .menu-item:hover, .menu-item.active {
-            color: var(--text-color);
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
         .menu-item.active {
             border-left: 4px solid var(--accent-pink);
             background-color: rgba(255, 0, 127, 0.05);
+            color: var(--text-color);
         }
 
         .main-content {
@@ -97,10 +93,7 @@
             margin-bottom: 35px;
         }
 
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-        }
+        h1 { font-size: 2.2rem; font-weight: 700; }
 
         .user-selector {
             background-color: var(--card-bg);
@@ -129,40 +122,22 @@
             flex-direction: column;
             gap: 15px;
             position: relative;
-            overflow: hidden;
         }
 
         .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
         }
-
         .card.green::before { background-color: var(--accent-green); }
         .card.pink::before { background-color: var(--accent-pink); }
         .card.blue::before { background-color: var(--accent-blue); }
 
         .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.95rem;
+            display: flex; justify-content: space-between; align-items: center;
+            color: var(--text-muted); font-weight: 600; font-size: 0.95rem;
         }
 
-        .card-value {
-            font-size: 2.2rem;
-            font-weight: 700;
-        }
-
-        .card-subtext {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
+        .card-value { font-size: 2.2rem; font-weight: 700; }
+        .card-subtext { font-size: 0.85rem; color: var(--text-muted); }
 
         .dashboard-row {
             display: grid;
@@ -179,90 +154,30 @@
         }
 
         .panel-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 1.2rem; font-weight: 600; margin-bottom: 25px;
+            display: flex; align-items: center; gap: 10px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 14px; color: var(--text-muted); font-size: 0.9rem; border-bottom: 2px solid var(--border-color); }
+        td { padding: 16px 14px; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); }
 
-        th {
-            padding: 14px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        td {
-            padding: 16px 14px;
-            font-size: 0.95rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
         .badge.success { background-color: rgba(0, 255, 170, 0.1); color: var(--accent-green); }
         .badge.neutral { background-color: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
 
-        .vector-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .vector-item {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .vector-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-        }
-
-        .vector-bar-bg {
-            height: 12px;
-            background-color: var(--card-bg);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .vector-bar-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .chart-svg-box {
-            width: 100%;
-            height: 200px;
-            margin-top: 15px;
-        }
-
+        .vector-list { display: flex; flex-direction: column; gap: 20px; }
+        .vector-item { display: flex; flex-direction: column; gap: 8px; }
+        .vector-info { display: flex; justify-content: space-between; font-size: 0.95rem; }
+        .vector-bar-bg { height: 12px; background-color: var(--card-bg); border-radius: 6px; overflow: hidden; }
+        .vector-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .chart-svg-box { width: 100%; height: 180px; margin-top: 15px; }
+        
         .trend-path {
-            fill: none;
-            stroke: var(--accent-green);
-            stroke-width: 4;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
+            fill: none; stroke: var(--accent-green); stroke-width: 4;
+            stroke-dasharray: 1000; stroke-dashoffset: 1000;
             animation: drawLine 2s forwards ease-in-out;
         }
-
         @keyframes drawLine { to { stroke-dashoffset: 0; } }
     </style>
 </head>
@@ -273,8 +188,7 @@
         <ul class="menu-list">
             <li><a href="#" class="menu-item active"><i class="fa-solid fa-chart-pie"></i> Visão Geral</a></li>
             <li><a href="#" class="menu-item"><i class="fa-solid fa-user-check"></i> Usuários Ativos</a></li>
-            <li><a href="#" class="menu-item"><i class="fa-solid fa-database"></i> Repositório (100+ Itens)</a></li>
-            <li><a href="#" class="menu-item"><i class="fa-solid fa-file-export"></i> Laudos e Relatórios</a></li>
+            <li><a href="#" class="menu-item"><i class="fa-solid fa-database"></i> Repositório (100+)</a></li>
         </ul>
     </div>
 
@@ -282,7 +196,7 @@
         <header>
             <div>
                 <h1>Painel do Especialista</h1>
-                <p style="color: var(--text-muted); margin-top: 5px;">Mapeamento clínico sem estressar ou expor o aluno.</p>
+                <p style="color: var(--text-muted); margin-top: 5px;">Mapeamento clínico sem expor ou frustrar o estudante.</p>
             </div>
             <div>
                 <select class="user-selector" id="user-select" onchange="changeUser()">
@@ -294,30 +208,30 @@
 
         <div class="metrics-grid">
             <div class="card green">
-                <div class="card-header">Tempo Médio de Decisão <i class="fa-solid fa-clock"></i></div>
-                <div class="card-value" id="metric-time">2.4s</div>
+                <div class="card-header">Tempo Médio de Ligação <i class="fa-solid fa-clock"></i></div>
+                <div class="card-value" id="metric-time">1.8s</div>
                 <div class="card-subtext" id="metric-time-sub"></div>
             </div>
             <div class="card pink">
-                <div class="card-header">Índice de Assertividade <i class="fa-solid fa-bullseye"></i></div>
-                <div class="card-value" id="metric-accuracy">85%</div>
+                <div class="card-header">Erros de Discriminação <i class="fa-solid fa-bullseye"></i></div>
+                <div class="card-value" id="metric-accuracy">2</div>
                 <div class="card-subtext" id="metric-accuracy-sub"></div>
             </div>
             <div class="card blue">
-                <div class="card-header">Constância / Sessões <i class="fa-solid fa-gamepad"></i></div>
-                <div class="card-value" id="metric-sessions">14</div>
-                <div class="card-subtext">Nível estável de engajamento lúdico</div>
+                <div class="card-header">Sessões Concluídas <i class="fa-solid fa-gamepad"></i></div>
+                <div class="card-value" id="metric-sessions">12</div>
+                <div class="card-subtext">Constância ativa linear mantida</div>
             </div>
         </div>
 
         <div class="dashboard-row">
             <div class="panel">
-                <div class="panel-title"><i class="fa-solid fa-history" style="color: var(--accent-blue);"></i> Histórico Recente pós-sessão</div>
+                <div class="panel-title"><i class="fa-solid fa-history" style="color: var(--accent-blue);"></i> Relatórios Pós-Sessão Coletados</div>
                 <table id="history-table">
                     <thead>
                         <tr>
                             <th>Data/Hora</th>
-                            <th>Módulo Aplicado</th>
+                            <th>Exercício Aplicado</th>
                             <th>Habilidade Mapeada</th>
                             <th>Tempo Total</th>
                             <th>Status Emocional</th>
@@ -328,13 +242,13 @@
             </div>
 
             <div class="panel">
-                <div class="panel-title"><i class="fa-solid fa-shield-heart" style="color: var(--accent-pink);"></i> Vetores Cognitivos Avaliados</div>
+                <div class="panel-title"><i class="fa-solid fa-shield-heart" style="color: var(--accent-pink);"></i> Vetores Cognitivos Mapeados</div>
                 <div class="vector-list" id="vector-container"></div>
             </div>
         </div>
 
         <div class="panel">
-            <div class="panel-title"><i class="fa-solid fa-chart-line" style="color: var(--accent-green);"></i> Tendência de Resposta Cognitiva (Curva de Autonomia)</div>
+            <div class="panel-title"><i class="fa-solid fa-chart-line" style="color: var(--accent-green);"></i> Tendência de Resposta Visual (Curva de Redução de Hesitação)</div>
             <div class="chart-svg-box">
                 <svg viewBox="0 0 1000 150" width="100%" height="100%">
                     <path class="trend-path" d="M50,120 Q250,90 500,60 T950,20" />
@@ -352,43 +266,41 @@
     <script>
         const userData = {
             pedro: {
-                time: "2.4s",
-                timeSub: 'Redução de <span style="color:var(--accent-green);">-0.7s</span> vs média histórica',
-                accuracy: "85%",
-                accuracySub: 'Ganho de <span style="color:var(--accent-pink);">+7%</span> em relação à semana 1',
-                sessions: "14",
+                time: "1.8s",
+                timeSub: 'Redução de <span style="color:var(--accent-green);">-0.6s</span> na hesitação motora',
+                accuracy: "2",
+                accuracySub: 'Foco mantido dentro do padrão esperado',
+                sessions: "12",
                 vectors: [
-                    { name: "Foco Atencional", val: 88, color: "var(--accent-green)" },
-                    { name: "Memória de Trabalho", val: 75, color: "var(--accent-pink)" },
-                    { name: "Flexibilidade Lógica", val: 90, color: "var(--accent-blue)" }
+                    { name: "Discriminação de Formas", val: 92, color: "var(--accent-green)" },
+                    { name: "Atenção Sustentada", val: 78, color: "var(--accent-pink)" },
+                    { name: "Processamento Visual", val: 85, color: "var(--accent-blue)" }
                 ],
                 history: [
-                    { date: "Hoje, 11:20", mod: "Pareamento de Formas", skill: "Discriminação Visual", time: "1m 45s", status: "Alta Resiliência" },
-                    { date: "09 Jun, 14:05", mod: "Agrupamento por Cores", skill: "Categorização Visual", time: "2m 10s", status: "Estável" },
-                    { date: "04 Jun, 10:15", mod: "Sequenciamento Lógico", skill: "Lógica Sequencial", time: "3m 02s", status: "Estável" }
+                    { date: "Hoje, 11:20", mod: "Pareamento Frutas-Sombras", skill: "Discriminação Visual", time: "1m 12s", status: "Excelente" },
+                    { date: "09 Jun, 14:05", mod: "Sequenciamento de Cores", skill: "Lógica Sequencial", time: "2m 04s", status: "Estável" }
                 ]
             },
             lucas: {
-                time: "3.1s",
-                timeSub: 'Estável com <span style="color:var(--accent-blue);">0.0s</span> de variação linear',
-                accuracy: "78%",
-                accuracySub: 'Evolução de <span style="color:var(--accent-green);">+3%</span> pós-fase de cores',
-                sessions: "9",
+                time: "2.9s",
+                timeSub: 'Variação sutil de <span style="color:var(--accent-blue);">+0.2s</span> linear',
+                accuracy: "5",
+                accuracySub: 'Redução de erros após estímulo de cores',
+                sessions: "8",
                 vectors: [
-                    { name: "Foco Atencional", val: 62, color: "var(--accent-green)" },
-                    { name: "Memória de Trabalho", val: 80, color: "var(--accent-pink)" },
-                    { name: "Flexibilidade Lógica", val: 74, color: "var(--accent-blue)" }
+                    { name: "Discriminação de Formas", val: 68, color: "var(--accent-green)" },
+                    { name: "Atenção Sustentada", val: 84, color: "var(--accent-pink)" },
+                    { name: "Processamento Visual", val: 70, color: "var(--accent-blue)" }
                 ],
                 history: [
-                    { date: "Ontem, 15:30", mod: "Sequenciamento Lógico", skill: "Lógica Sequencial", time: "2m 55s", status: "Estável" },
-                    { date: "05 Jun, 09:40", mod: "Pareamento de Formas", skill: "Discriminação Visual", time: "2m 15s", status: "Foco Oscilante" }
+                    { date: "Ontem, 15:30", mod: "Pareamento Frutas-Sombras", skill: "Discriminação Visual", time: "2m 32s", status: "Estável" },
+                    { date: "05 Jun, 09:40", mod: "Encaixe Lógico de Blocos", skill: "Coordenação Fina", time: "3m 10s", status: "Hesitação Leve" }
                 ]
             }
         };
 
         function renderData(userKey) {
             const data = userData[userKey];
-            
             document.getElementById("metric-time").innerText = data.time;
             document.getElementById("metric-time-sub").innerHTML = data.timeSub;
             document.getElementById("metric-accuracy").innerText = data.accuracy;
@@ -400,21 +312,15 @@
             data.vectors.forEach(v => {
                 vectorContainer.innerHTML += `
                     <div class="vector-item">
-                        <div class="vector-info">
-                            <span>${v.name}</span>
-                            <span style="color: ${v.color}; font-weight: bold;">${v.val}%</span>
-                        </div>
-                        <div class="vector-bar-bg">
-                            <div class="vector-bar-fill" style="width: ${v.val}%; background-color: ${v.color};"></div>
-                        </div>
-                    </div>
-                `;
+                        <div class="vector-info"><span>${v.name}</span><span style="color: ${v.color}; font-weight: bold;">${v.val}%</span></div>
+                        <div class="vector-bar-bg"><div class="vector-bar-fill" style="width: ${v.val}%; background-color: ${v.color};"></div></div>
+                    </div>`;
             });
 
             const tbody = document.querySelector("#history-table tbody");
             tbody.innerHTML = "";
             data.history.forEach(h => {
-                const badgeClass = h.status.includes("Alta") || h.status.includes("Estável") ? "success" : "neutral";
+                const badgeClass = h.status.includes("Excelente") || h.status.includes("Estável") ? "success" : "neutral";
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight: 600;">${h.date}</td>
@@ -422,16 +328,13 @@
                         <td style="color: var(--text-muted);">${h.skill}</td>
                         <td>${h.time}</td>
                         <td><span class="badge ${badgeClass}">${h.status}</span></td>
-                    </tr>
-                `;
+                    </tr>`;
             });
         }
 
         function changeUser() {
-            const select = document.getElementById("user-select");
-            renderData(select.value);
+            renderData(document.getElementById("user-select").value);
         }
-
         renderData("pedro");
     </script>
 </body>
