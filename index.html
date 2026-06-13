@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AcessiQuiz Pro - Impulse Mobile</title>
+    <title>AcessiQuiz Pro - Edição Ultra Colorida</title>
     <style>
         :root {
-            --bg-dark: #090d16;
-            --panel-bg: #131a26;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --panel-bg: rgba(30, 41, 59, 0.7);
             --neon-green: #00ffaa;
             --neon-pink: #ff007f;
             --neon-blue: #38bdf8;
-            --text-main: #f8fafc;
-            --text-muted: #64748b;
+            --neon-yellow: #f1c40f;
+            --neon-purple: #bf5af2;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
         }
 
         * { 
@@ -25,7 +27,7 @@
         }
 
         body { 
-            background-color: var(--bg-dark); 
+            background: var(--bg-gradient);
             color: var(--text-main); 
             min-height: 100vh; 
             display: flex; 
@@ -35,126 +37,179 @@
             overflow-x: hidden;
         }
 
-        /* TELA DE LOGIN */
+        /* TELA DE LOGIN COLORIDA */
         #login-screen {
             width: 100%; 
             max-width: 380px; 
             background: var(--panel-bg); 
-            border-radius: 24px; 
-            padding: 32px 20px; 
+            backdrop-filter: blur(16px);
+            border-radius: 28px; 
+            padding: 35px 24px; 
             text-align: center; 
-            border: 1px solid rgba(255,255,255,0.05); 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 2px solid rgba(56, 189, 248, 0.2); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px rgba(56, 189, 248, 0.1);
         }
 
         .login-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 15px;
             display: inline-block;
+            animation: pulse 2s infinite;
         }
 
-        #login-screen h2 { font-size: 1.6rem; margin-bottom: 8px; color: var(--neon-green); }
-        #login-screen p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.9rem; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        #login-screen h2 { font-size: 1.8rem; margin-bottom: 8px; color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,170,0.3); }
+        #login-screen p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; }
 
         .input-group input { 
             width: 100%; 
-            background: rgba(0,0,0,0.2); 
-            border: 2px solid #1e293b; 
-            border-radius: 14px; 
-            padding: 16px; 
+            background: rgba(0,0,0,0.4); 
+            border: 2px solid rgba(255,255,255,0.1); 
+            border-radius: 16px; 
+            padding: 18px; 
             color: #fff; 
-            font-size: 1rem; 
+            font-size: 1.1rem; 
             outline: none; 
-            transition: border-color 0.3s; 
+            transition: all 0.3s; 
             text-align: center;
+            font-weight: bold;
         }
-        .input-group input:focus { border-color: var(--neon-blue); }
+        .input-group input:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
 
         .start-btn { 
             width: 100%; 
-            padding: 16px; 
-            background: var(--neon-pink); 
+            padding: 18px; 
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple)); 
             border: none; 
-            border-radius: 14px; 
+            border-radius: 16px; 
             color: white; 
-            font-weight: 700; 
-            font-size: 1rem; 
+            font-weight: 800; 
+            font-size: 1.1rem; 
             cursor: pointer; 
             margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(255, 0, 127, 0.3);
+            transition: transform 0.1s;
         }
+        .start-btn:active { transform: scale(0.98); }
 
-        /* JOGO CONTAINER RESPONSIVO */
+        /* CONTAINER DO JOGO INTERATIVO */
         .impulse-container { 
             display: none; 
             width: 100%; 
-            max-width: 400px; 
+            max-width: 410px; 
             background: var(--panel-bg); 
-            border-radius: 24px; 
-            padding: 20px 16px; 
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); 
-            border: 1px solid rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(16px);
+            border-radius: 28px; 
+            padding: 22px 18px; 
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 255, 170, 0.05); 
+            border: 2px solid rgba(255, 255, 255, 0.05); 
             text-align: center; 
             position: relative; 
         }
 
-        .progress-bar-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); transition: width 0.4s ease; }
+        .progress-bar-container { width: 100%; height: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; margin-bottom: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), var(--neon-blue), var(--neon-green)); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
-        .subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; padding: 0 10px; }
+        h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; color: #fff; }
+        .subtitle { color: #e2e8f0; font-size: 0.95rem; margin-bottom: 22px; padding: 0 5px; font-weight: 500; }
 
-        /* AREA DO CANVAS ADAPTADA PARA CELULAR */
+        /* ÁREA DE CONEXÕES */
         .game-canvas { 
             position: relative; 
-            min-height: 360px; 
+            min-height: 380px; 
             display: flex; 
             justify-content: space-between; 
-            padding: 0 5px; 
+            padding: 0 8px; 
         }
         
         #lines-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
-        .column { display: flex; flex-direction: column; justify-content: space-between; gap: 12px; z-index: 2; }
+        .column { display: flex; flex-direction: column; justify-content: space-between; gap: 14px; z-index: 2; }
         
-        /* NODES OTIMIZADOS PARA TOQUE NO MOBILE */
+        /* CÍRCULOS (NODES) COLORIDOS E VIBRANTES */
         .node { 
-            width: 62px; 
-            height: 62px; 
-            background: rgba(255, 255, 255, 0.02); 
-            border: 2px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 16px; 
+            width: 66px; 
+            height: 66px; 
+            background: rgba(255, 255, 255, 0.04); 
+            border: 3px solid rgba(255, 255, 255, 0.15); 
+            border-radius: 22px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 28px; 
+            font-size: 34px; 
             cursor: pointer; 
-            transition: all 0.2s ease; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
             touch-action: manipulation;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .node.selected { border-color: var(--neon-blue); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 12px var(--neon-blue); }
-        .node.matched { border-color: var(--neon-green); opacity: 0.2; cursor: default; }
         
-        /* FILTRO DE SOMBRA SEGURO PARA QUALQUER NAVEGADOR */
-        .node.shadow-mode span { filter: brightness(0) opacity(0.35); }
+        /* CORES DE BORDAS INTERATIVAS INDIVIDUAIS */
+        .node[data-border="blue"] { border-color: var(--neon-blue); }
+        .node[data-border="pink"] { border-color: var(--neon-pink); }
+        .node[data-border="green"] { border-color: var(--neon-green); }
+        .node[data-border="yellow"] { border-color: var(--neon-yellow); }
+        .node[data-border="purple"] { border-color: var(--neon-purple); }
 
-        /* ESTILOS ESPECÍFICOS PARA A FASE DE CORES */
-        .color-block { width: 34px; height: 34px; border-radius: 8px; }
-
-        .action-btn { width: 100%; padding: 15px; background: var(--neon-pink); border: none; border-radius: 14px; color: white; font-size: 1rem; font-weight: 600; margin-top: 20px; cursor: pointer; display: none; }
+        .node.selected { 
+            background: rgba(255, 255, 255, 0.15); 
+            transform: scale(1.1);
+            box-shadow: 0 0 20px currentColor;
+        }
         
-        .telemetry-overlay { margin-top: 20px; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 12px; font-size: 0.75rem; color: var(--text-muted); text-align: left; line-height: 1.4; }
+        /* QUANDO ACERTA: PERMANECE TOTALMENTE COLORIDO E COM VULTOR BRILHANTE */
+        .node.matched { 
+            border-color: var(--neon-green) !important; 
+            background: rgba(0, 255, 170, 0.15);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+            cursor: default; 
+        }
+        
+        /* QUADRADOS TOTALMENTE PREENCHIDOS E COLORIDOS */
+        .color-block { width: 40px; height: 40px; border-radius: 12px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 4px 8px rgba(0,0,0,0.3); }
+
+        .action-btn { 
+            width: 100%; 
+            padding: 16px; 
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-blue)); 
+            border: none; 
+            border-radius: 16px; 
+            color: #090d16; 
+            font-size: 1.1rem; 
+            font-weight: 800; 
+            margin-top: 22px; 
+            cursor: pointer; 
+            display: none;
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.4);
+        }
+        
+        .telemetry-overlay { 
+            margin-top: 22px; 
+            background: rgba(0, 0, 0, 0.4); 
+            padding: 14px; 
+            border-radius: 16px; 
+            font-size: 0.8rem; 
+            color: #cbd5e1; 
+            text-align: left; 
+            line-height: 1.5;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <span class="login-icon">🧠</span>
+        <span class="login-icon">🎮</span>
         <h2>AcessiQuiz Pro</h2>
-        <p>Insira seu nome para iniciar o treinamento.</p>
+        <p>Insira seu nome para iniciar a diversão!</p>
         <div class="input-group">
             <input type="text" id="username" placeholder="Nome do Aluno" autocomplete="off">
         </div>
-        <button class="start-btn" onclick="startGame()">INICIAR SESSÃO</button>
+        <button class="start-btn" onclick="startGame()">VAMOS JOGAR! ➔</button>
     </div>
 
     <div class="impulse-container" id="game-container">
@@ -168,52 +223,51 @@
             <div class="column" id="right-nodes"></div>
         </div>
         
-        <button class="action-btn" id="next-action-btn" onclick="advancePhase()">Concluído ➔</button>
+        <button class="action-btn" id="next-action-btn" onclick="advancePhase()">Próxima Fase ➔</button>
         
         <div class="telemetry-overlay">
-            👤 Aluno Ativo: <span id="current-user-display" style="color: #fff; font-weight: bold;">---</span><br>
-            📊 Telemetria: <span id="telemetry-data">Calculando...</span>
+            👤 Aluno Ativo: <span id="current-user-display" style="color: var(--neon-blue); font-weight: bold;">---</span><br>
+            📊 Telemetria Secreta: <span id="telemetry-data">Calculando...</span>
         </div>
     </div>
 
     <script>
-        // Utilizando estruturas baseadas em Emojis nativos e Elementos HTML puros para evitar quebras
+        // Cores estruturadas para as bordas das caixas
+        const borderColors = ["blue", "pink", "green", "yellow", "purple"];
+
         const gamePhases = [
             { 
-                title: "Discriminação Visual", 
-                desc: "Toque na fruta e depois na sua sombra correspondente.", 
+                title: "Pareamento de Frutas", 
+                desc: "Ligue as frutas iguais de cada coluna!", 
                 items: [
                     { id: "a", content: "🍎", type: "emoji" },
                     { id: "b", content: "🍌", type: "emoji" },
-                    { id: "c", content: "🥕", type: "emoji" },
+                    { id: "c", content: "🍉", type: "emoji" },
                     { id: "d", content: "🍇", type: "emoji" },
-                    { id: "e", content: "🍉", type: "emoji" }
-                ], 
-                mode: "shadow" 
+                    { id: "e", content: "🍓", type: "emoji" }
+                ]
             },
             { 
-                title: "Categorização de Cor", 
-                desc: "Ligue os blocos coloridos aos seus pares corretos.", 
+                title: "Associação de Cores", 
+                desc: "Combine os blocos que possuem a mesma cor!", 
                 items: [
-                    { id: "1", content: "#38bdf8", type: "color" },
-                    { id: "2", content: "#ff007f", type: "color" },
-                    { id: "3", content: "#00ffaa", type: "color" },
-                    { id: "4", content: "#ffaa00", type: "color" },
-                    { id: "5", content: "#ffffff", type: "color" }
-                ], 
-                mode: "color" 
+                    { id: "1", content: "var(--neon-blue)", type: "color" },
+                    { id: "2", content: "var(--neon-pink)", type: "color" },
+                    { id: "3", content: "var(--neon-green)", type: "color" },
+                    { id: "4", content: "var(--neon-yellow)", type: "color" },
+                    { id: "5", content: "var(--neon-purple)", type: "color" }
+                ]
             },
             { 
-                title: "Lógica Sequencial", 
-                desc: "Combine os pares de símbolos idênticos.", 
+                title: "Lógica de Símbolos", 
+                desc: "Encontre os símbolos idênticos e ligue-os!", 
                 items: [
-                    { id: "x1", content: "🌀", type: "emoji" },
-                    { id: "x2", content: "⭐", type: "emoji" },
+                    { id: "x1", content: "⭐", type: "emoji" },
+                    { id: "x2", content: "🎈", type: "emoji" },
                     { id: "x3", content: "🔺", type: "emoji" },
                     { id: "x4", content: "⚡", type: "emoji" },
-                    { id: "x5", content: "❤️", type: "emoji" }
-                ], 
-                mode: "logic" 
+                    { id: "x5", content: "🍀", type: "emoji" }
+                ]
             }
         ];
 
@@ -221,7 +275,7 @@
 
         function startGame() {
             const name = document.getElementById('username').value.trim();
-            if (!name) { alert("Por favor, insira um nome."); return; }
+            if (!name) { alert("Por favor, insira o seu nome."); return; }
             localStorage.setItem('acessiquiz_user', name);
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
@@ -241,13 +295,15 @@
             const leftCol = document.getElementById("left-nodes"), rightCol = document.getElementById("right-nodes");
             leftCol.innerHTML = ""; rightCol.innerHTML = "";
             
+            // Duplica os itens idênticos e embaralha para a coluna da direita
             const shuffledRight = [...phase.items].sort(() => Math.random() - 0.5);
 
-            // Coluna Esquerda
-            phase.items.forEach(item => {
+            // Geração da Coluna Esquerda
+            phase.items.forEach((item, i) => {
                 const node = document.createElement("div"); 
                 node.className = "node"; 
                 node.dataset.id = item.id;
+                node.setAttribute("data-border", borderColors[i % borderColors.length]);
                 
                 if(item.type === "emoji") {
                     node.innerHTML = `<span>${item.content}</span>`;
@@ -259,11 +315,12 @@
                 leftCol.appendChild(node);
             });
 
-            // Coluna Direita (Embaralhada)
-            shuffledRight.forEach(item => {
+            // Geração da Coluna Direita (Idêntica e Sem Sombra)
+            shuffledRight.forEach((item, i) => {
                 const node = document.createElement("div"); 
-                node.className = `node ${phase.mode === 'shadow' ? 'shadow-mode' : ''}`; 
+                node.className = "node"; 
                 node.dataset.id = item.id;
+                node.setAttribute("data-border", borderColors[(i + 2) % borderColors.length]); // Variabilidade de cor de borda
                 
                 if(item.type === "emoji") {
                     node.innerHTML = `<span>${item.content}</span>`;
@@ -297,7 +354,11 @@
                 } else {
                     totalErrors++; 
                     node.style.borderColor = "var(--neon-pink)";
-                    setTimeout(() => node.style.borderColor = "rgba(255,255,255,0.08)", 400);
+                    node.style.boxShadow = "0 0 15px var(--neon-pink)";
+                    setTimeout(() => {
+                        node.style.borderColor = "";
+                        node.style.boxShadow = "";
+                    }, 400);
                 }
                 updateTelemetry();
             }
@@ -315,14 +376,14 @@
             line.setAttribute("x2", r2.left + r2.width / 2 - canvas.left); 
             line.setAttribute("y2", r2.top + r2.height / 2 - canvas.top);
             line.setAttribute("stroke", "var(--neon-green)"); 
-            line.setAttribute("stroke-width", "3"); 
-            line.setAttribute("stroke-dasharray", "4,4");
+            line.setAttribute("stroke-width", "4"); 
+            line.setAttribute("stroke-dasharray", "none"); // Linha contínua e firme para melhor visualização
             svg.appendChild(line);
         }
 
         function updateTelemetry() {
             const time = ((Date.now() - startTime) / 1000).toFixed(1);
-            document.getElementById("telemetry-data").innerText = `Latência: ${time}s | Erros: ${totalErrors}`;
+            document.getElementById("telemetry-data").innerText = `Latência: ${time}s | Erros Coletados: ${totalErrors}`;
         }
 
         function advancePhase() {
