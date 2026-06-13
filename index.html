@@ -1,171 +1,337 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcessiQuiz Pro - Impulse Neuro-Training</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --bg-dark: #090d16;
-            --panel-bg: #131a26;
-            --neon-green: #00ffaa;
-            --neon-pink: #ff007f;
-            --neon-blue: #38bdf8;
-            --text-main: #f8fafc;
-            --text-muted: #64748b;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AcessiQuiz Pro - Impulse Mobile</title>
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --panel-bg: #131a26;
+            --neon-green: #00ffaa;
+            --neon-pink: #ff007f;
+            --neon-blue: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+        }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; user-select: none; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            user-select: none; 
+            -webkit-user-select: none;
+        }
 
-        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 12px;
+            overflow-x: hidden;
+        }
 
-        /* TELA DE LOGIN */
-        #login-screen {
-            width: 100%; max-width: 400px; background: var(--panel-bg); border-radius: 32px; padding: 40px; text-align: center; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-        }
+        /* TELA DE LOGIN */
+        #login-screen {
+            width: 100%; 
+            max-width: 380px; 
+            background: var(--panel-bg); 
+            border-radius: 24px; 
+            padding: 32px 20px; 
+            text-align: center; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
 
-        #login-screen h2 { font-size: 1.8rem; margin-bottom: 10px; color: var(--neon-green); }
-        #login-screen p { color: var(--text-muted); margin-bottom: 30px; font-size: 0.9rem; }
+        .login-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
 
-        .input-group { position: relative; margin-bottom: 30px; }
-        .input-group input { width: 100%; background: rgba(0,0,0,0.2); border: 2px solid #1e293b; border-radius: 16px; padding: 18px; color: #white; font-size: 1.1rem; outline: none; transition: border-color 0.3s; color: #fff; }
-        .input-group input:focus { border-color: var(--neon-blue); }
+        #login-screen h2 { font-size: 1.6rem; margin-bottom: 8px; color: var(--neon-green); }
+        #login-screen p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.9rem; }
 
-        .start-btn { width: 100%; padding: 18px; background: var(--neon-pink); border: none; border-radius: 16px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.2s; }
-        .start-btn:active { transform: scale(0.98); }
+        .input-group input { 
+            width: 100%; 
+            background: rgba(0,0,0,0.2); 
+            border: 2px solid #1e293b; 
+            border-radius: 14px; 
+            padding: 16px; 
+            color: #fff; 
+            font-size: 1rem; 
+            outline: none; 
+            transition: border-color 0.3s; 
+            text-align: center;
+        }
+        .input-group input:focus { border-color: var(--neon-blue); }
 
-        /* JOGO CONTAINER */
-        .impulse-container { display: none; width: 100%; max-width: 480px; background: var(--panel-bg); border-radius: 32px; padding: 30px 24px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.03); text-align: center; position: relative; }
+        .start-btn { 
+            width: 100%; 
+            padding: 16px; 
+            background: var(--neon-pink); 
+            border: none; 
+            border-radius: 14px; 
+            color: white; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            margin-top: 20px;
+        }
 
-        .progress-bar-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); transition: width 0.4s ease; }
+        /* JOGO CONTAINER RESPONSIVO */
+        .impulse-container { 
+            display: none; 
+            width: 100%; 
+            max-width: 400px; 
+            background: var(--panel-bg); 
+            border-radius: 24px; 
+            padding: 20px 16px; 
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); 
+            border: 1px solid rgba(255, 255, 255, 0.03); 
+            text-align: center; 
+            position: relative; 
+        }
 
-        h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
-        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
+        .progress-bar-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); transition: width 0.4s ease; }
 
-        .game-canvas { position: relative; min-height: 400px; display: flex; justify-content: space-between; padding: 0 10px; }
-        #lines-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
+        .subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; padding: 0 10px; }
 
-        .column { display: flex; flex-direction: column; justify-content: space-between; gap: 15px; z-index: 2; }
-        .node { width: 70px; height: 70px; background: rgba(255, 255, 255, 0.02); border: 2px solid rgba(255, 255, 255, 0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; transition: all 0.2s ease; }
-        .node.selected { border-color: var(--neon-blue); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 15px var(--neon-blue); }
-        .node.matched { border-color: var(--neon-green); opacity: 0.3; cursor: default; }
-        .node.shadow-mode { filter: brightness(0) invert(1) opacity(0.2); }
+        /* AREA DO CANVAS ADAPTADA PARA CELULAR */
+        .game-canvas { 
+            position: relative; 
+            min-height: 360px; 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 0 5px; 
+        }
+        
+        #lines-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
-        .action-btn { width: 100%; padding: 16px; background: var(--neon-pink); border: none; border-radius: 16px; color: white; font-size: 1rem; font-weight: 600; margin-top: 30px; cursor: pointer; display: none; }
-        .telemetry-overlay { margin-top: 30px; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 12px; font-size: 0.8rem; color: var(--text-muted); text-align: left; }
-    </style>
+        .column { display: flex; flex-direction: column; justify-content: space-between; gap: 12px; z-index: 2; }
+        
+        /* NODES OTIMIZADOS PARA TOQUE NO MOBILE */
+        .node { 
+            width: 62px; 
+            height: 62px; 
+            background: rgba(255, 255, 255, 0.02); 
+            border: 2px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 28px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            touch-action: manipulation;
+        }
+        .node.selected { border-color: var(--neon-blue); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 12px var(--neon-blue); }
+        .node.matched { border-color: var(--neon-green); opacity: 0.2; cursor: default; }
+        
+        /* FILTRO DE SOMBRA SEGURO PARA QUALQUER NAVEGADOR */
+        .node.shadow-mode span { filter: brightness(0) opacity(0.35); }
+
+        /* ESTILOS ESPECÍFICOS PARA A FASE DE CORES */
+        .color-block { width: 34px; height: 34px; border-radius: 8px; }
+
+        .action-btn { width: 100%; padding: 15px; background: var(--neon-pink); border: none; border-radius: 14px; color: white; font-size: 1rem; font-weight: 600; margin-top: 20px; cursor: pointer; display: none; }
+        
+        .telemetry-overlay { margin-top: 20px; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 12px; font-size: 0.75rem; color: var(--text-muted); text-align: left; line-height: 1.4; }
+    </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <i class="fa-solid fa-brain" style="font-size: 3rem; color: var(--neon-green); margin-bottom: 20px;"></i>
-        <h2>AcessiQuiz Pro</h2>
-        <p>Insira seu nome para iniciar o treinamento.</p>
-        <div class="input-group">
-            <input type="text" id="username" placeholder="Nome do Usuário" autocomplete="off">
-        </div>
-        <button class="start-btn" onclick="startGame()">INICIAR SESSÃO</button>
-    </div>
+    <div id="login-screen">
+        <span class="login-icon">🧠</span>
+        <h2>AcessiQuiz Pro</h2>
+        <p>Insira seu nome para iniciar o treinamento.</p>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Nome do Aluno" autocomplete="off">
+        </div>
+        <button class="start-btn" onclick="startGame()">INICIAR SESSÃO</button>
+    </div>
 
-    <div class="impulse-container" id="game-container">
-        <div class="progress-bar-container"><div class="progress-bar-fill" id="progress-indicator"></div></div>
-        <h1 id="phase-title">Carregando...</h1>
-        <p class="subtitle" id="phase-desc">Analizando estímulos...</p>
-        <div class="game-canvas" id="canvas-area">
-            <svg id="lines-layer"></svg>
-            <div class="column" id="left-nodes"></div>
-            <div class="column" id="right-nodes"></div>
-        </div>
-        <button class="action-btn" id="next-action-btn" onclick="advancePhase()">Concluído ➔</button>
-        <div class="telemetry-overlay">
-            <i class="fa-solid fa-chart-line"></i> Usuário Ativo: <span id="current-user-display" style="color: #fff">---</span>
-            <br>
-            <i class="fa-solid fa-microchip"></i> Telemetria: <span id="telemetry-data">Calculando...</span>
-        </div>
-    </div>
+    <div class="impulse-container" id="game-container">
+        <div class="progress-bar-container"><div class="progress-bar-fill" id="progress-indicator"></div></div>
+        <h1 id="phase-title">Carregando...</h1>
+        <p class="subtitle" id="phase-desc">Analisando estímulos...</p>
+        
+        <div class="game-canvas" id="canvas-area">
+            <svg id="lines-layer"></svg>
+            <div class="column" id="left-nodes"></div>
+            <div class="column" id="right-nodes"></div>
+        </div>
+        
+        <button class="action-btn" id="next-action-btn" onclick="advancePhase()">Concluído ➔</button>
+        
+        <div class="telemetry-overlay">
+            👤 Aluno Ativo: <span id="current-user-display" style="color: #fff; font-weight: bold;">---</span><br>
+            📊 Telemetria: <span id="telemetry-data">Calculando...</span>
+        </div>
+    </div>
 
-    <script>
-        const gamePhases = [
-            { title: "Discriminação Visual", desc: "Combine as 5 frutas com suas sombras.", items: [{id:"a", icon:"fa-apple-whole", color:"#ff4d4d"},{id:"b", icon:"fa-lemon", color:"#f1c40f"},{id:"c", icon:"fa-carrot", color:"#e67e22"},{id:"d", icon:"fa-grapes", color:"#9b59b6"},{id:"e", icon:"fa-pepper-hot", color:"#e74c3c"}], mode: "shadow" },
-            { title: "Categorização de Cor", desc: "Ligue os blocos às caixas da mesma cor.", items: [{id:"1", icon:"fa-square", color:"var(--neon-blue)"},{id:"2", icon:"fa-square", color:"var(--neon-pink)"},{id:"3", icon:"fa-square", color:"var(--neon-green)"},{id:"4", icon:"fa-square", color:"#ffaa00"},{id:"5", icon:"fa-square", color:"#ffffff"}], mode: "color" },
-            { title: "Lógica Sequencial", desc: "Combine os pares lógicos.", items: [{id:"x1", icon:"fa-circle", color:"var(--neon-blue)"},{id:"x2", icon:"fa-star", color:"var(--neon-pink)"},{id:"x3", icon:"fa-triangle", color:"var(--neon-green)"},{id:"x4", icon:"fa-bolt", color:"#ffaa00"},{id:"x5", icon:"fa-heart", color:"#ff4d4d"}], mode: "logic" }
-        ];
+    <script>
+        // Utilizando estruturas baseadas em Emojis nativos e Elementos HTML puros para evitar quebras
+        const gamePhases = [
+            { 
+                title: "Discriminação Visual", 
+                desc: "Toque na fruta e depois na sua sombra correspondente.", 
+                items: [
+                    { id: "a", content: "🍎", type: "emoji" },
+                    { id: "b", content: "🍌", type: "emoji" },
+                    { id: "c", content: "🥕", type: "emoji" },
+                    { id: "d", content: "🍇", type: "emoji" },
+                    { id: "e", content: "🍉", type: "emoji" }
+                ], 
+                mode: "shadow" 
+            },
+            { 
+                title: "Categorização de Cor", 
+                desc: "Ligue os blocos coloridos aos seus pares corretos.", 
+                items: [
+                    { id: "1", content: "#38bdf8", type: "color" },
+                    { id: "2", content: "#ff007f", type: "color" },
+                    { id: "3", content: "#00ffaa", type: "color" },
+                    { id: "4", content: "#ffaa00", type: "color" },
+                    { id: "5", content: "#ffffff", type: "color" }
+                ], 
+                mode: "color" 
+            },
+            { 
+                title: "Lógica Sequencial", 
+                desc: "Combine os pares de símbolos idênticos.", 
+                items: [
+                    { id: "x1", content: "🌀", type: "emoji" },
+                    { id: "x2", content: "⭐", type: "emoji" },
+                    { id: "x3", content: "🔺", type: "emoji" },
+                    { id: "x4", content: "⚡", type: "emoji" },
+                    { id: "x5", content: "❤️", type: "emoji" }
+                ], 
+                mode: "logic" 
+            }
+        ];
 
-        let currentPhase = 0, selectedNode = null, matches = 0, startTime = Date.now(), totalErrors = 0;
+        let currentPhase = 0, selectedNode = null, matches = 0, startTime = Date.now(), totalErrors = 0;
 
-        function startGame() {
-            const name = document.getElementById('username').value.trim();
-            if (!name) { alert("Por favor, insira o seu nome."); return; }
-            localStorage.setItem('acessiquiz_user', name);
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-            document.getElementById('current-user-display').innerText = name;
-            buildPhase(0);
-            setInterval(updateTelemetry, 500);
-        }
+        function startGame() {
+            const name = document.getElementById('username').value.trim();
+            if (!name) { alert("Por favor, insira um nome."); return; }
+            localStorage.setItem('acessiquiz_user', name);
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('current-user-display').innerText = name;
+            buildPhase(0);
+            setInterval(updateTelemetry, 500);
+        }
 
-        function buildPhase(index) {
-            currentPhase = index; const phase = gamePhases[index]; matches = 0; selectedNode = null;
-            document.getElementById("lines-layer").innerHTML = "";
-            document.getElementById("next-action-btn").style.display = "none";
-            document.getElementById("phase-title").innerText = phase.title;
-            document.getElementById("phase-desc").innerText = phase.desc;
-            document.getElementById("progress-indicator").style.width = `${((index + 1) / gamePhases.length) * 100}%`;
-            const leftCol = document.getElementById("left-nodes"), rightCol = document.getElementById("right-nodes");
-            leftCol.innerHTML = ""; rightCol.innerHTML = "";
-            const shuffledRight = [...phase.items].sort(() => Math.random() - 0.5);
-            phase.items.forEach(item => {
-                const node = document.createElement("div"); node.className = "node"; node.dataset.id = item.id;
-                node.innerHTML = `<i class="fa-solid ${item.icon}" style="color:${item.color}"></i>`;
-                node.onclick = () => handleSelect(node, "left"); leftCol.appendChild(node);
-            });
-            shuffledRight.forEach(item => {
-                const node = document.createElement("div"); node.className = `node ${phase.mode === 'shadow' ? 'shadow-mode' : ''}`;
-                node.dataset.id = item.id; node.innerHTML = `<i class="fa-solid ${item.icon}" style="color:${phase.mode === 'color' ? item.color : '#fff'}"></i>`;
-                node.onclick = () => handleSelect(node, "right"); rightCol.appendChild(node);
-            });
-        }
+        function buildPhase(index) {
+            currentPhase = index; const phase = gamePhases[index]; matches = 0; selectedNode = null;
+            document.getElementById("lines-layer").innerHTML = "";
+            document.getElementById("next-action-btn").style.display = "none";
+            document.getElementById("phase-title").innerText = phase.title;
+            document.getElementById("phase-desc").innerText = phase.desc;
+            document.getElementById("progress-indicator").style.width = `${((index + 1) / gamePhases.length) * 100}%`;
+            
+            const leftCol = document.getElementById("left-nodes"), rightCol = document.getElementById("right-nodes");
+            leftCol.innerHTML = ""; rightCol.innerHTML = "";
+            
+            const shuffledRight = [...phase.items].sort(() => Math.random() - 0.5);
 
-        function handleSelect(node, side) {
-            if (node.classList.contains("matched")) return;
-            if (side === "left") {
-                if (selectedNode) selectedNode.classList.remove("selected");
-                selectedNode = node; node.classList.add("selected");
-            } else {
-                if (!selectedNode) return;
-                if (selectedNode.dataset.id === node.dataset.id) {
-                    drawConnection(selectedNode, node);
-                    selectedNode.classList.add("matched"); node.classList.add("matched");
-                    selectedNode.classList.remove("selected"); selectedNode = null; matches++;
-                    if (matches === gamePhases[currentPhase].items.length) document.getElementById("next-action-btn").style.display = "block";
-                } else {
-                    totalErrors++; node.style.borderColor = "var(--neon-pink)";
-                    setTimeout(() => node.style.borderColor = "rgba(255,255,255,0.08)", 400);
-                }
-                updateTelemetry();
-            }
-        }
+            // Coluna Esquerda
+            phase.items.forEach(item => {
+                const node = document.createElement("div"); 
+                node.className = "node"; 
+                node.dataset.id = item.id;
+                
+                if(item.type === "emoji") {
+                    node.innerHTML = `<span>${item.content}</span>`;
+                } else if(item.type === "color") {
+                    node.innerHTML = `<div class="color-block" style="background:${item.content}"></div>`;
+                }
+                
+                node.onclick = () => handleSelect(node, "left"); 
+                leftCol.appendChild(node);
+            });
 
-        function drawConnection(n1, n2) {
-            const svg = document.getElementById("lines-layer"), r1 = n1.getBoundingClientRect(), r2 = n2.getBoundingClientRect(), canvas = document.getElementById("canvas-area").getBoundingClientRect();
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", r1.left + r1.width / 2 - canvas.left); line.setAttribute("y1", r1.top + r1.height / 2 - canvas.top);
-            line.setAttribute("x2", r2.left + r2.width / 2 - canvas.left); line.setAttribute("y2", r2.top + r2.height / 2 - canvas.top);
-            line.setAttribute("stroke", "var(--neon-green)"); line.setAttribute("stroke-width", "3"); line.setAttribute("stroke-dasharray", "5,5");
-            svg.appendChild(line);
-        }
+            // Coluna Direita (Embaralhada)
+            shuffledRight.forEach(item => {
+                const node = document.createElement("div"); 
+                node.className = `node ${phase.mode === 'shadow' ? 'shadow-mode' : ''}`; 
+                node.dataset.id = item.id;
+                
+                if(item.type === "emoji") {
+                    node.innerHTML = `<span>${item.content}</span>`;
+                } else if(item.type === "color") {
+                    node.innerHTML = `<div class="color-block" style="background:${item.content}"></div>`;
+                }
+                
+                node.onclick = () => handleSelect(node, "right"); 
+                rightCol.appendChild(node);
+            });
+        }
 
-        function updateTelemetry() {
-            const time = ((Date.now() - startTime) / 1000).toFixed(1);
-            document.getElementById("telemetry-data").innerText = `Latência: ${time}s | Erros: ${totalErrors}`;
-        }
+        function handleSelect(node, side) {
+            if (node.classList.contains("matched")) return;
+            if (side === "left") {
+                if (selectedNode) selectedNode.classList.remove("selected");
+                selectedNode = node; 
+                node.classList.add("selected");
+            } else {
+                if (!selectedNode) return;
+                if (selectedNode.dataset.id === node.dataset.id) {
+                    drawConnection(selectedNode, node);
+                    selectedNode.classList.add("matched"); 
+                    node.classList.add("matched");
+                    selectedNode.classList.remove("selected"); 
+                    selectedNode = null; 
+                    matches++;
+                    if (matches === gamePhases[currentPhase].items.length) {
+                        document.getElementById("next-action-btn").style.display = "block";
+                    }
+                } else {
+                    totalErrors++; 
+                    node.style.borderColor = "var(--neon-pink)";
+                    setTimeout(() => node.style.borderColor = "rgba(255,255,255,0.08)", 400);
+                }
+                updateTelemetry();
+            }
+        }
 
-        function advancePhase() {
-            if (currentPhase < gamePhases.length - 1) buildPhase(currentPhase + 1);
-            else { alert("Treino Finalizado!"); location.reload(); }
-        }
-    </script>
+        function drawConnection(n1, n2) {
+            const svg = document.getElementById("lines-layer");
+            const r1 = n1.getBoundingClientRect(); 
+            const r2 = n2.getBoundingClientRect(); 
+            const canvas = document.getElementById("canvas-area").getBoundingClientRect();
+            
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", r1.left + r1.width / 2 - canvas.left); 
+            line.setAttribute("y1", r1.top + r1.height / 2 - canvas.top);
+            line.setAttribute("x2", r2.left + r2.width / 2 - canvas.left); 
+            line.setAttribute("y2", r2.top + r2.height / 2 - canvas.top);
+            line.setAttribute("stroke", "var(--neon-green)"); 
+            line.setAttribute("stroke-width", "3"); 
+            line.setAttribute("stroke-dasharray", "4,4");
+            svg.appendChild(line);
+        }
+
+        function updateTelemetry() {
+            const time = ((Date.now() - startTime) / 1000).toFixed(1);
+            document.getElementById("telemetry-data").innerText = `Latência: ${time}s | Erros: ${totalErrors}`;
+        }
+
+        function advancePhase() {
+            if (currentPhase < gamePhases.length - 1) buildPhase(currentPhase + 1);
+            else { 
+                alert("Sessão finalizada com sucesso! Parabéns!"); 
+                location.reload(); 
+            }
+        }
+    </script>
 </body>
 </html>
