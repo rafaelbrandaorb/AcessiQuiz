@@ -1,277 +1,171 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcessiQuiz - Módulo de Pareamento Inclusivo</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: #1e293b;
-            --accent-green: #00ffaa;
-            --accent-pink: #ff007f;
-            --accent-blue: #3a86ff;
-            --text-color: #f8fafc;
-            --text-muted: #cbd5e1;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcessiQuiz Pro - Impulse Neuro-Training</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --panel-bg: #131a26;
+            --neon-green: #00ffaa;
+            --neon-pink: #ff007f;
+            --neon-blue: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+        }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; user-select: none; }
 
-        body {
-            background-color: #020617;
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 
-        .game-container {
-            width: 100%;
-            max-width: 800px;
-            background-color: var(--card-bg);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border: 2px solid rgba(0, 255, 170, 0.1);
-            text-align: center;
-            position: relative;
-        }
+        /* TELA DE LOGIN */
+        #login-screen {
+            width: 100%; max-width: 400px; background: var(--panel-bg); border-radius: 32px; padding: 40px; text-align: center; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
 
-        h1 {
-            color: var(--accent-green);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        #login-screen h2 { font-size: 1.8rem; margin-bottom: 10px; color: var(--neon-green); }
+        #login-screen p { color: var(--text-muted); margin-bottom: 30px; font-size: 0.9rem; }
 
-        .instructions {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            font-weight: 500;
-        }
+        .input-group { position: relative; margin-bottom: 30px; }
+        .input-group input { width: 100%; background: rgba(0,0,0,0.2); border: 2px solid #1e293b; border-radius: 16px; padding: 18px; color: #white; font-size: 1.1rem; outline: none; transition: border-color 0.3s; color: #fff; }
+        .input-group input:focus { border-color: var(--neon-blue); }
 
-        .game-zone {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 60px;
-            min-height: 350px;
-            position: relative;
-        }
+        .start-btn { width: 100%; padding: 18px; background: var(--neon-pink); border: none; border-radius: 16px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.2s; }
+        .start-btn:active { transform: scale(0.98); }
 
-        .column {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            z-index: 2;
-        }
+        /* JOGO CONTAINER */
+        .impulse-container { display: none; width: 100%; max-width: 480px; background: var(--panel-bg); border-radius: 32px; padding: 30px 24px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.03); text-align: center; position: relative; }
 
-        .item {
-            width: 90px;
-            height: 90px;
-            background: #0b0f19;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 45px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .progress-bar-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); transition: width 0.4s ease; }
 
-        .item.selected {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 20px var(--accent-blue);
-            transform: scale(1.1);
-        }
+        h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
+        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
 
-        .item.matched {
-            border-color: var(--accent-green);
-            opacity: 0.5;
-            cursor: default;
-        }
+        .game-canvas { position: relative; min-height: 400px; display: flex; justify-content: space-between; padding: 0 10px; }
+        #lines-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
-        .item.shadow-item {
-            filter: brightness(0) invert(1) opacity(0.25);
-        }
+        .column { display: flex; flex-direction: column; justify-content: space-between; gap: 15px; z-index: 2; }
+        .node { width: 70px; height: 70px; background: rgba(255, 255, 255, 0.02); border: 2px solid rgba(255, 255, 255, 0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; transition: all 0.2s ease; }
+        .node.selected { border-color: var(--neon-blue); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 15px var(--neon-blue); }
+        .node.matched { border-color: var(--neon-green); opacity: 0.3; cursor: default; }
+        .node.shadow-mode { filter: brightness(0) invert(1) opacity(0.2); }
 
-        /* Camada Invisível de desenho das Linhas SVG */
-        #connections-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .feedback-btn {
-            margin-top: 30px;
-            background-color: var(--accent-pink);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            display: none;
-            box-shadow: 0 8px 20px rgba(255, 0, 127, 0.3);
-            animation: pulse 1.5s infinite;
-        }
-
-        .telemetry-panel {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: left;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .telemetry-title {
-            color: var(--accent-blue);
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-    </style>
+        .action-btn { width: 100%; padding: 16px; background: var(--neon-pink); border: none; border-radius: 16px; color: white; font-size: 1rem; font-weight: 600; margin-top: 30px; cursor: pointer; display: none; }
+        .telemetry-overlay { margin-top: 30px; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 12px; font-size: 0.8rem; color: var(--text-muted); text-align: left; }
+    </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <h1>Pareamento Visual</h1>
-        <p class="instructions">Toque numa fruta da esquerda e depois na sua sombra correspondente!</p>
+    <div id="login-screen">
+        <i class="fa-solid fa-brain" style="font-size: 3rem; color: var(--neon-green); margin-bottom: 20px;"></i>
+        <h2>AcessiQuiz Pro</h2>
+        <p>Insira seu nome para iniciar o treinamento.</p>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Nome do Usuário" autocomplete="off">
+        </div>
+        <button class="start-btn" onclick="startGame()">INICIAR SESSÃO</button>
+    </div>
 
-        <div class="game-zone" id="game-zone-area">
-            <svg id="connections-layer"></svg>
-            
-            <div class="column" id="left-column">
-                <div class="item" data-id="apple" onclick="handleItemClick(this, 'left')"><i class="fa-solid fa-apple-whole" style="color: #ff4d4d;"></i></div>
-                <div class="item" data-id="lemon" onclick="handleItemClick(this, 'left')"><i class="fa-solid fa-lemon" style="color: #f1c40f;"></i></div>
-                <div class="item" data-id="carrot" onclick="handleItemClick(this, 'left')"><i class="fa-solid fa-carrot" style="color: #e67e22;"></i></div>
-            </div>
+    <div class="impulse-container" id="game-container">
+        <div class="progress-bar-container"><div class="progress-bar-fill" id="progress-indicator"></div></div>
+        <h1 id="phase-title">Carregando...</h1>
+        <p class="subtitle" id="phase-desc">Analizando estímulos...</p>
+        <div class="game-canvas" id="canvas-area">
+            <svg id="lines-layer"></svg>
+            <div class="column" id="left-nodes"></div>
+            <div class="column" id="right-nodes"></div>
+        </div>
+        <button class="action-btn" id="next-action-btn" onclick="advancePhase()">Concluído ➔</button>
+        <div class="telemetry-overlay">
+            <i class="fa-solid fa-chart-line"></i> Usuário Ativo: <span id="current-user-display" style="color: #fff">---</span>
+            <br>
+            <i class="fa-solid fa-microchip"></i> Telemetria: <span id="telemetry-data">Calculando...</span>
+        </div>
+    </div>
 
-            <div class="column" id="right-column">
-                <div class="item shadow-item" data-id="lemon" onclick="handleItemClick(this, 'right')"><i class="fa-solid fa-lemon"></i></div>
-                <div class="item shadow-item" data-id="apple" onclick="handleItemClick(this, 'right')"><i class="fa-solid fa-apple-whole"></i></div>
-                <div class="item shadow-item" data-id="carrot" onclick="handleItemClick(this, 'right')"><i class="fa-solid fa-carrot"></i></div>
-            </div>
-        </div>
+    <script>
+        const gamePhases = [
+            { title: "Discriminação Visual", desc: "Combine as 5 frutas com suas sombras.", items: [{id:"a", icon:"fa-apple-whole", color:"#ff4d4d"},{id:"b", icon:"fa-lemon", color:"#f1c40f"},{id:"c", icon:"fa-carrot", color:"#e67e22"},{id:"d", icon:"fa-grapes", color:"#9b59b6"},{id:"e", icon:"fa-pepper-hot", color:"#e74c3c"}], mode: "shadow" },
+            { title: "Categorização de Cor", desc: "Ligue os blocos às caixas da mesma cor.", items: [{id:"1", icon:"fa-square", color:"var(--neon-blue)"},{id:"2", icon:"fa-square", color:"var(--neon-pink)"},{id:"3", icon:"fa-square", color:"var(--neon-green)"},{id:"4", icon:"fa-square", color:"#ffaa00"},{id:"5", icon:"fa-square", color:"#ffffff"}], mode: "color" },
+            { title: "Lógica Sequencial", desc: "Combine os pares lógicos.", items: [{id:"x1", icon:"fa-circle", color:"var(--neon-blue)"},{id:"x2", icon:"fa-star", color:"var(--neon-pink)"},{id:"x3", icon:"fa-triangle", color:"var(--neon-green)"},{id:"x4", icon:"fa-bolt", color:"#ffaa00"},{id:"x5", icon:"fa-heart", color:"#ff4d4d"}], mode: "logic" }
+        ];
 
-        <button class="feedback-btn" id="next-btn" onclick="restartGame()">🏆 Nível Concluído! Jogar Novamente</button>
+        let currentPhase = 0, selectedNode = null, matches = 0, startTime = Date.now(), totalErrors = 0;
 
-        <div class="telemetry-panel">
-            <div class="telemetry-title">内外 Telemetria Silenciosa (Análise do Especialista)</div>
-            <p>Estado: <span id="log-status" style="color: var(--accent-green)">Aguardando interação ativa...</span></p>
-            <p style="margin-top: 5px;">Tempo de Decisão: <span id="timer-log" style="color: #fff;">0.0s</span> | Erros de Discriminação: <span id="error-log" style="color: var(--accent-pink);">0</span></p>
-        </div>
-    </div>
+        function startGame() {
+            const name = document.getElementById('username').value.trim();
+            if (!name) { alert("Por favor, insira o seu nome."); return; }
+            localStorage.setItem('acessiquiz_user', name);
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('current-user-display').innerText = name;
+            buildPhase(0);
+            setInterval(updateTelemetry, 500);
+        }
 
-    <script>
-        let selectedLeft = null;
-        let startTime = Date.now();
-        let wrongAttempts = 0;
-        let correctMatches = 0;
-        const totalTargets = 3;
+        function buildPhase(index) {
+            currentPhase = index; const phase = gamePhases[index]; matches = 0; selectedNode = null;
+            document.getElementById("lines-layer").innerHTML = "";
+            document.getElementById("next-action-btn").style.display = "none";
+            document.getElementById("phase-title").innerText = phase.title;
+            document.getElementById("phase-desc").innerText = phase.desc;
+            document.getElementById("progress-indicator").style.width = `${((index + 1) / gamePhases.length) * 100}%`;
+            const leftCol = document.getElementById("left-nodes"), rightCol = document.getElementById("right-nodes");
+            leftCol.innerHTML = ""; rightCol.innerHTML = "";
+            const shuffledRight = [...phase.items].sort(() => Math.random() - 0.5);
+            phase.items.forEach(item => {
+                const node = document.createElement("div"); node.className = "node"; node.dataset.id = item.id;
+                node.innerHTML = `<i class="fa-solid ${item.icon}" style="color:${item.color}"></i>`;
+                node.onclick = () => handleSelect(node, "left"); leftCol.appendChild(node);
+            });
+            shuffledRight.forEach(item => {
+                const node = document.createElement("div"); node.className = `node ${phase.mode === 'shadow' ? 'shadow-mode' : ''}`;
+                node.dataset.id = item.id; node.innerHTML = `<i class="fa-solid ${item.icon}" style="color:${phase.mode === 'color' ? item.color : '#fff'}"></i>`;
+                node.onclick = () => handleSelect(node, "right"); rightCol.appendChild(node);
+            });
+        }
 
-        function handleItemClick(element, columnSide) {
-            if (element.classList.contains('matched')) return;
+        function handleSelect(node, side) {
+            if (node.classList.contains("matched")) return;
+            if (side === "left") {
+                if (selectedNode) selectedNode.classList.remove("selected");
+                selectedNode = node; node.classList.add("selected");
+            } else {
+                if (!selectedNode) return;
+                if (selectedNode.dataset.id === node.dataset.id) {
+                    drawConnection(selectedNode, node);
+                    selectedNode.classList.add("matched"); node.classList.add("matched");
+                    selectedNode.classList.remove("selected"); selectedNode = null; matches++;
+                    if (matches === gamePhases[currentPhase].items.length) document.getElementById("next-action-btn").style.display = "block";
+                } else {
+                    totalErrors++; node.style.borderColor = "var(--neon-pink)";
+                    setTimeout(() => node.style.borderColor = "rgba(255,255,255,0.08)", 400);
+                }
+                updateTelemetry();
+            }
+        }
 
-            if (columnSide === 'left') {
-                // Seleção na coluna da esquerda
-                if (selectedLeft) selectedLeft.classList.remove('selected');
-                selectedLeft = element;
-                element.classList.add('selected');
-                document.getElementById('log-status').innerText = "Objeto selecionado. Buscando correspondência...";
-            } else {
-                // Clique na coluna da direita para tentar ligar
-                if (!selectedLeft) {
-                    document.getElementById('log-status').innerText = "Toque primeiro numa fruta colorida da esquerda!";
-                    return;
-                }
+        function drawConnection(n1, n2) {
+            const svg = document.getElementById("lines-layer"), r1 = n1.getBoundingClientRect(), r2 = n2.getBoundingClientRect(), canvas = document.getElementById("canvas-area").getBoundingClientRect();
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", r1.left + r1.width / 2 - canvas.left); line.setAttribute("y1", r1.top + r1.height / 2 - canvas.top);
+            line.setAttribute("x2", r2.left + r2.width / 2 - canvas.left); line.setAttribute("y2", r2.top + r2.height / 2 - canvas.top);
+            line.setAttribute("stroke", "var(--neon-green)"); line.setAttribute("stroke-width", "3"); line.setAttribute("stroke-dasharray", "5,5");
+            svg.appendChild(line);
+        }
 
-                // Verifica se os IDs coincidem (Acertou)
-                if (selectedLeft.dataset.id === element.dataset.id) {
-                    drawConnectingLine(selectedLeft, element);
-                    
-                    selectedLeft.classList.add('matched');
-                    element.classList.add('matched');
-                    selectedLeft.classList.remove('selected');
-                    
-                    selectedLeft = null;
-                    correctMatches++;
-                    document.getElementById('log-status').innerText = "Conexão correta estabelecida!";
-                    
-                    if (correctMatches === totalTargets) {
-                        document.getElementById('next-btn').style.display = "inline-block";
-                        document.getElementById('log-status').innerText = "Sessão concluída com sucesso!";
-                    }
-                } else {
-                    // Errou o par
-                    wrongAttempts++;
-                    document.getElementById('error-log').innerText = wrongAttempts;
-                    document.getElementById('log-status').innerText = "Associação incorreta. Analisando hesitação...";
-                    
-                    element.style.borderColor = "var(--accent-pink)";
-                    setTimeout(() => {
-                        if (!element.classList.contains('matched')) {
-                            element.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                        }
-                    }, 500);
-                }
-            }
-        }
+        function updateTelemetry() {
+            const time = ((Date.now() - startTime) / 1000).toFixed(1);
+            document.getElementById("telemetry-data").innerText = `Latência: ${time}s | Erros: ${totalErrors}`;
+        }
 
-        function drawConnectingLine(leftEl, rightEl) {
-            const svg = document.getElementById('connections-layer');
-            const rectLeft = leftEl.getBoundingClientRect();
-            const rectRight = rightEl.getBoundingClientRect();
-            const containerRect = document.getElementById('game-zone-area').getBoundingClientRect();
-
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            
-            // Calcula o centro exato de cada círculo relativo à área do jogo
-            line.setAttribute("x1", rectLeft.left + rectLeft.width / 2 - containerRect.left);
-            line.setAttribute("y1", rectLeft.top + rectLeft.height / 2 - containerRect.top);
-            line.setAttribute("x2", rectRight.left + rectRight.width / 2 - containerRect.left);
-            line.setAttribute("y2", rectRight.top + rectRight.height / 2 - containerRect.top);
-            
-            line.setAttribute("stroke", "var(--accent-green)");
-            line.setAttribute("stroke-width", "5");
-            line.setAttribute("stroke-linecap", "round");
-            line.setAttribute("stroke-dasharray", "8, 6");
-            
-            svg.appendChild(line);
-        }
-
-        function restartGame() {
-            location.reload();
-        }
-
-        // Atualização do Cronómetro de Decisão
-        setInterval(() => {
-            if (correctMatches < totalTargets) {
-                const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-                document.getElementById('timer-log').innerText = elapsed + "s";
-            }
-        }, 100);
-    </script>
+        function advancePhase() {
+            if (currentPhase < gamePhases.length - 1) buildPhase(currentPhase + 1);
+            else { alert("Treino Finalizado!"); location.reload(); }
+        }
+    </script>
 </body>
 </html>
