@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AcessiQuiz - Edição 5 Atividades</title>
+    <title>AcessiQuiz - 5 Pares por Atividade</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -20,53 +20,108 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; user-select: none; -webkit-user-select: none;}
         body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 12px; overflow-x: hidden; }
 
-        #login-screen { width: 100%; max-width: 380px; background: var(--panel-bg); backdrop-filter: blur(16px); border-radius: 28px; padding: 35px 24px; text-align: center; border: 2px solid rgba(56, 189, 248, 0.2); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        .box-panel { width: 100%; max-width: 430px; background: var(--panel-bg); backdrop-filter: blur(16px); border-radius: 28px; padding: 25px 20px; text-align: center; border: 2px solid rgba(56, 189, 248, 0.15); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        
+        #menu-screen, #game-container { display: none; }
+
         .login-icon { font-size: 3.5rem; margin-bottom: 15px; display: inline-block; }
-        #login-screen h2 { font-size: 1.8rem; margin-bottom: 8px; color: var(--neon-green); }
-        #login-screen p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; }
+        h2 { font-size: 1.8rem; margin-bottom: 8px; color: var(--neon-green); }
+        p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem; }
 
         .input-group input { width: 100%; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; color: #fff; font-size: 1.1rem; outline: none; text-align: center; font-weight: bold; }
-        .start-btn { width: 100%; padding: 18px; background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple)); border: none; border-radius: 16px; color: white; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
+        .action-btn-main { width: 100%; padding: 18px; background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple)); border: none; border-radius: 16px; color: white; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
 
-        .impulse-container { display: none; width: 100%; max-width: 410px; background: var(--panel-bg); backdrop-filter: blur(16px); border-radius: 28px; padding: 22px 18px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); border: 2px solid rgba(255, 255, 255, 0.05); text-align: center; position: relative; }
-        .progress-bar-container { width: 100%; height: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), var(--neon-blue), var(--neon-green)); transition: width 0.4s ease; }
-
-        .game-canvas { position: relative; min-height: 380px; display: flex; justify-content: space-between; padding: 0 8px; }
-        #lines-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .column { display: flex; flex-direction: column; justify-content: space-between; gap: 14px; z-index: 2; }
+        /* GRID DO MENU */
+        .menu-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .menu-card { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 2px solid rgba(255, 255, 255, 0.08); 
+            padding: 14px; 
+            border-radius: 18px; 
+            cursor: pointer; 
+            text-align: left; 
+            transition: all 0.2s;
+        }
+        .menu-card:active { transform: scale(0.98); }
+        .menu-card .icon { font-size: 1.8rem; }
+        .menu-card .info h3 { font-size: 1rem; color: #fff; margin-bottom: 2px; }
+        .menu-card .info p { font-size: 0.78rem; color: var(--text-muted); margin: 0; }
         
-        .node { width: 66px; height: 66px; background: rgba(255, 255, 255, 0.04); border: 3px solid rgba(255, 255, 255, 0.15); border-radius: 22px; display: flex; align-items: center; justify-content: center; font-size: 34px; cursor: pointer; transition: all 0.2s; touch-action: manipulation; }
-        .node[data-border="blue"] { border-color: var(--neon-blue); }
-        .node[data-border="pink"] { border-color: var(--neon-pink); }
-        .node[data-border="green"] { border-color: var(--neon-green); }
-        .node[data-border="yellow"] { border-color: var(--neon-yellow); }
-        .node[data-border="purple"] { border-color: var(--neon-purple); }
+        .menu-card[data-theme="1"] { border-color: rgba(56, 189, 248, 0.3); }
+        .menu-card[data-theme="2"] { border-color: rgba(255, 0, 127, 0.3); }
+        .menu-card[data-theme="3"] { border-color: rgba(241, 196, 15, 0.3); }
+        .menu-card[data-theme="4"] { border-color: rgba(0, 255, 170, 0.3); }
+        .menu-card[data-theme="5"] { border-color: rgba(191, 90, 242, 0.3); }
 
-        .node.selected { background: rgba(255, 255, 255, 0.15); transform: scale(1.1); }
-        .node.matched { border-color: var(--neon-green) !important; background: rgba(0, 255, 170, 0.15); opacity: 0.4; cursor: default; }
-        .color-block { width: 40px; height: 40px; border-radius: 12px; }
+        /* JOGO INTERATIVO (OTIMIZADO PARA 5 ITENS) */
+        .progress-bar-container { width: 100%; height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; margin-bottom: 15px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); }
 
-        .action-btn { width: 100%; padding: 16px; background: linear-gradient(90deg, var(--neon-green), var(--neon-blue)); border: none; border-radius: 16px; color: #090d16; font-size: 1.1rem; font-weight: 800; margin-top: 22px; cursor: pointer; display: none; }
-        .telemetry-overlay { margin-top: 22px; background: rgba(0, 0, 0, 0.4); padding: 14px; border-radius: 16px; font-size: 0.8rem; text-align: left; }
+        .game-canvas { position: relative; min-height: 420px; display: flex; justify-content: space-between; padding: 0 5px; margin-top: 10px; }
+        #lines-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .column { display: flex; flex-direction: column; justify-content: space-between; gap: 10px; z-index: 2; }
+        
+        /* Círculos ligeiramente menores (58px) para caberem perfeitamente sem rolar a tela */
+        .node { width: 58px; height: 58px; background: rgba(255, 255, 255, 0.04); border: 3px solid rgba(255, 255, 255, 0.15); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: all 0.2s; touch-action: manipulation; }
+        .node.selected { background: rgba(255, 255, 255, 0.15); transform: scale(1.08); }
+        .node.matched { border-color: var(--neon-green) !important; background: rgba(0, 255, 170, 0.15); opacity: 0.35; cursor: default; }
+        .color-block { width: 34px; height: 34px; border-radius: 10px; }
+
+        .game-footer-btns { display: none; flex-direction: column; gap: 8px; margin-top: 18px; }
+        .footer-btn { width: 100%; padding: 14px; border: none; border-radius: 16px; font-size: 1rem; font-weight: 800; cursor: pointer; }
+        .btn-next { background: linear-gradient(90deg, var(--neon-green), var(--neon-blue)); color: #060913; }
+        .btn-menu { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+
+        .telemetry-overlay { margin-top: 18px; background: rgba(0, 0, 0, 0.4); padding: 12px; border-radius: 16px; font-size: 0.8rem; text-align: left; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
+    <div id="login-screen" class="box-panel" style="display: block;">
         <span class="login-icon">🎮</span>
         <h2>AcessiQuiz</h2>
-        <p>Insira o nome do aluno para iniciar a jornada.</p>
+        <p>Insira o nome do aluno para começar.</p>
         <div class="input-group">
             <input type="text" id="username" placeholder="Nome do Aluno" autocomplete="off">
         </div>
-        <button class="start-btn" onclick="startGame()">INICIAR SESSÃO ➔</button>
+        <button class="action-btn-main" onclick="handleLogin()">ENTRAR NO JOGO ➔</button>
     </div>
 
-    <div class="impulse-container" id="game-container">
-        <div class="progress-bar-container"><div class="progress-bar-fill" id="progress-indicator"></div></div>
-        <h1 id="phase-title">Carregando...</h1>
-        <p class="subtitle" id="phase-desc">Ligue as figuras correspondentes!</p>
+    <div id="menu-screen" class="box-panel">
+        <h2 style="color: #fff; font-size: 1.5rem;">Escolha uma Atividade</h2>
+        <p style="margin-bottom: 10px;">Selecione o tema para iniciar o treino cognitivo:</p>
+        
+        <div class="menu-grid">
+            <div class="menu-card" data-theme="1" onclick="startActivity(0)">
+                <div class="icon">🍎</div>
+                <div class="info"><h3>Pareamento de Frutas</h3><p>Agora com 5 frutas coloridas diferentes.</p></div>
+            </div>
+            <div class="menu-card" data-theme="2" onclick="startActivity(1)">
+                <div class="icon">🎨</div>
+                <div class="info"><h3>Associação de Cores</h3><p>5 blocos de cores puras para associar.</p></div>
+            </div>
+            <div class="menu-card" data-theme="3" onclick="startActivity(2)">
+                <div class="icon">⭐</div>
+                <div class="info"><h3>Lógica de Símbolos</h3><p>Formas espaciais e atenção focada.</p></div>
+            </div>
+            <div class="menu-card" data-theme="4" onclick="startActivity(3)">
+                <div class="icon">🐶</div>
+                <div class="info"><h3>Mundo dos Animais</h3><p>Pareamento direto de bichinhos fofos.</p></div>
+            </div>
+            <div class="menu-card" data-theme="5" onclick="startActivity(4)">
+                <div class="icon">😀</div>
+                <div class="info"><h3>Reconhecendo Emoções</h3><p>Identificação de expressões socioemocionais.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box-panel" id="game-container">
+        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+        <h1 id="phase-title" style="font-size: 1.3rem;">Atividade</h1>
+        <p id="phase-desc" style="margin-bottom: 10px; font-size: 0.88rem;">Ligue os pares!</p>
         
         <div class="game-canvas" id="canvas-area">
             <svg id="lines-layer"></svg>
@@ -74,85 +129,75 @@
             <div class="column" id="right-nodes"></div>
         </div>
         
-        <button class="action-btn" id="next-action-btn" onclick="advancePhase()">Próxima Atividade ➔</button>
+        <div class="game-footer-btns" id="footer-controls">
+            <button class="footer-btn btn-next" onclick="backToMenu()">Concluir Atividade 🎉</button>
+            <button class="footer-btn btn-menu" onclick="backToMenu()">➔ Voltar ao Menu</button>
+        </div>
         
         <div class="telemetry-overlay">
             👤 Aluno: <span id="current-user-display" style="color: var(--neon-blue); font-weight: bold;">---</span><br>
-            📊 Cronômetro: <span id="telemetry-data">Calculando...</span>
+            📊 Desempenho: <span id="telemetry-data">Calculando...</span>
         </div>
     </div>
 
     <script>
         const borderColors = ["blue", "pink", "green", "yellow", "purple"];
         
+        // CADA ATIVIDADE POSSUI AGORA EXATAMENTE 5 ELEMENTOS
         const gamePhases = [
-            { 
-                title: "1. Pareamento de Frutas", 
-                desc: "Conecte as frutas idênticas das colunas!", 
-                items: [{ id: "a", content: "🍎", type: "emoji" }, { id: "b", content: "🍌", type: "emoji" }, { id: "c", content: "🍉", type: "emoji" }] 
-            },
-            { 
-                title: "2. Associação de Cores", 
-                desc: "Combine as caixas que têm a mesma cor!", 
-                items: [{ id: "1", content: "var(--neon-blue)", type: "color" }, { id: "2", content: "var(--neon-pink)", type: "color" }, { id: "3", content: "var(--neon-green)", type: "color" }] 
-            },
-            { 
-                title: "3. Lógica de Símbolos", 
-                desc: "Ache os símbolos correspondentes e junte-os!", 
-                items: [{ id: "x1", content: "⭐", type: "emoji" }, { id: "x2", content: "⚡", type: "emoji" }, { id: "x3", content: "🎈", type: "emoji" }] 
-            },
-            { 
-                title: "4. Mundo dos Animais", 
-                desc: "Ligue os animaizinhos iguais!", 
-                items: [{ id: "an1", content: "🐶", type: "emoji" }, { id: "an2", content: "🐱", type: "emoji" }, { id: "an3", content: "🦁", type: "emoji" }] 
-            },
-            { 
-                title: "5. Reconhecendo Emoções", 
-                desc: "Pareie as expressões faciais correspondentes!", 
-                items: [{ id: "em1", content: "😀", type: "emoji" }, { id: "em2", content: "😮", type: "emoji" }, { id: "em3", content: "😌", type: "emoji" }] 
-            }
+            { title: "Pareamento de Frutas", desc: "Ligue as frutas iguais!", items: [{ id: "a", content: "🍎" }, { id: "b", content: "🍌" }, { id: "c", content: "🍉" }, { id: "d", content: "🍇" }, { id: "e", content: "🍓" }], type: "emoji" },
+            { title: "Associação de Cores", desc: "Combine as caixas de mesma cor!", items: [{ id: "1", content: "var(--neon-blue)" }, { id: "2", content: "var(--neon-pink)" }, { id: "3", content: "var(--neon-green)" }, { id: "4", content: "var(--neon-yellow)" }, { id: "5", content: "var(--neon-purple)" }], type: "color" },
+            { title: "Lógica de Símbolos", desc: "Ache os símbolos correspondentes!", items: [{ id: "x1", content: "⭐" }, { id: "x2", content: "⚡" }, { id: "x3", content: "🎈" }, { id: "x4", content: "🔺" }, { id: "x5", content: "🍀" }], type: "emoji" },
+            { title: "Mundo dos Animais", desc: "Ligue os animais idênticos!", items: [{ id: "an1", content: "🐶" }, { id: "an2", content: "🐱" }, { id: "an3", content: "🦁" }, { id: "an4", content: "🦊" }, { id: "an5", content: "🐼" }], type: "emoji" },
+            { title: "Reconhecendo Emoções", desc: "Pareie as expressões faciais iguais!", items: [{ id: "em1", content: "😀" }, { id: "em2", content: "😮" }, { id: "em3", content: "😌" }, { id: "em4", content: "😍" }, { id: "em5", content: "😡" }], type: "emoji" }
         ];
 
-        let currentPhase = 0, selectedNode = null, matches = 0, startTime = null, totalErrors = 0, userName = "";
+        let selectedActivity = 0, selectedNode = null, matches = 0, startTime = null, totalErrors = 0, userName = "";
 
-        function startGame() {
+        function handleLogin() {
             userName = document.getElementById('username').value.trim();
             if (!userName) { alert("Por favor, insira o nome."); return; }
             localStorage.setItem('acessiquiz_current_user', userName);
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-            document.getElementById('current-user-display').innerText = userName;
-            startTime = Date.now();
-            buildPhase(0);
-            setInterval(updateTelemetry, 200);
+            document.getElementById('menu-screen').style.display = 'block';
         }
 
-        function buildPhase(index) {
-            currentPhase = index; const phase = gamePhases[index]; matches = 0; selectedNode = null;
+        function startActivity(index) {
+            selectedActivity = index; matches = 0; totalErrors = 0; selectedNode = null;
+            
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('current-user-display').innerText = userName;
             document.getElementById("lines-layer").innerHTML = "";
-            document.getElementById("next-action-btn").style.display = "none";
+            document.getElementById("footer-controls").style.display = "none";
+            
+            const phase = gamePhases[index];
             document.getElementById("phase-title").innerText = phase.title;
             document.getElementById("phase-desc").innerText = phase.desc;
-            document.getElementById("progress-indicator").style.width = `${((index + 1) / gamePhases.length) * 100}%`;
             
             const leftCol = document.getElementById("left-nodes"), rightCol = document.getElementById("right-nodes");
             leftCol.innerHTML = ""; rightCol.innerHTML = "";
             
             const shuffledRight = [...phase.items].sort(() => Math.random() - 0.5);
+            startTime = Date.now();
 
             phase.items.forEach((item, i) => {
                 const node = document.createElement("div"); node.className = "node"; node.dataset.id = item.id;
                 node.setAttribute("data-border", borderColors[i % borderColors.length]);
-                node.innerHTML = item.type === "emoji" ? `<span>${item.content}</span>` : `<div class="color-block" style="background:${item.content}"></div>`;
+                node.innerHTML = phase.type === "emoji" ? `<span>${item.content}</span>` : `<div class="color-block" style="background:${item.content}"></div>`;
                 node.onclick = () => handleSelect(node, "left"); leftCol.appendChild(node);
             });
 
             shuffledRight.forEach((item, i) => {
                 const node = document.createElement("div"); node.className = "node"; node.dataset.id = item.id;
-                node.setAttribute("data-border", borderColors[(i + 3) % borderColors.length]);
-                node.innerHTML = item.type === "emoji" ? `<span>${item.content}</span>` : `<div class="color-block" style="background:${item.content}"></div>`;
+                node.setAttribute("data-border", borderColors[(i + 2) % borderColors.length]);
+                node.innerHTML = phase.type === "emoji" ? `<span>${item.content}</span>` : `<div class="color-block" style="background:${item.content}"></div>`;
                 node.onclick = () => handleSelect(node, "right"); rightCol.appendChild(node);
             });
+            
+            if(!window.telemetryInterval) {
+                window.telemetryInterval = setInterval(updateTelemetry, 200);
+            }
         }
 
         function handleSelect(node, side) {
@@ -166,7 +211,11 @@
                     drawConnection(selectedNode, node);
                     selectedNode.classList.add("matched"); node.classList.add("matched");
                     selectedNode.classList.remove("selected"); selectedNode = null; matches++;
-                    if (matches === gamePhases[currentPhase].items.length) document.getElementById("next-action-btn").style.display = "block";
+                    
+                    if (matches === gamePhases[selectedActivity].items.length) {
+                        saveActivitySession();
+                        document.getElementById("footer-controls").style.display = "flex";
+                    }
                 } else {
                     totalErrors++;
                     node.style.borderColor = "var(--neon-pink)";
@@ -185,31 +234,30 @@
         }
 
         function updateTelemetry() {
-            if(!startTime) return;
+            if(!startTime || matches === gamePhases[selectedActivity].items.length) return;
             const time = ((Date.now() - startTime) / 1000).toFixed(1);
-            document.getElementById("telemetry-data").innerText = `${time}s | Erros Encontrados: ${totalErrors}`;
+            document.getElementById("telemetry-data").innerText = `${time}s | Erros: ${totalErrors}`;
         }
 
-        function advancePhase() {
-            if (currentPhase < gamePhases.length - 1) {
-                buildPhase(currentPhase + 1);
-            } else {
-                const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
-                
-                let history = JSON.parse(localStorage.getItem('acessiquiz_history')) || [];
-                const sessionData = {
-                    name: userName,
-                    time: totalTime,
-                    errors: totalErrors,
-                    date: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})
-                };
-                history.unshift(sessionData);
-                localStorage.setItem('acessiquiz_history', JSON.stringify(history));
-                localStorage.setItem('acessiquiz_last_session', JSON.stringify(sessionData));
+        function saveActivitySession() {
+            const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+            document.getElementById("telemetry-data").innerText = `${totalTime}s | Erros: ${totalErrors} (Salvo!)`;
 
-                alert(`Incrível! Sessão Completa das 5 Atividades!\nTempo total: ${totalTime}s | Erros: ${totalErrors}`);
-                location.reload();
-            }
+            let history = JSON.parse(localStorage.getItem('acessiquiz_history')) || [];
+            const sessionData = {
+                name: userName + " (" + gamePhases[selectedActivity].title + ")",
+                time: totalTime,
+                errors: totalErrors,
+                date: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})
+            };
+            history.unshift(sessionData);
+            localStorage.setItem('acessiquiz_history', JSON.stringify(history));
+            localStorage.setItem('acessiquiz_last_session', JSON.stringify(sessionData));
+        }
+
+        function backToMenu() {
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'block';
         }
     </script>
 </body>
